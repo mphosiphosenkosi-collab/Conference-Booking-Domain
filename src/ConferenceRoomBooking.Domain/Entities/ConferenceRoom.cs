@@ -1,3 +1,4 @@
+using System;
 using ConferenceRoomBooking.Domain.Enums;
 
 namespace ConferenceRoomBooking.Domain.Entities;
