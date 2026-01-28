@@ -298,7 +298,7 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             foreach (var booking in bookings.OrderByDescending(b => b.StartTime))
             {
-                // FIXED: Use RoomId to find the room, not booking.Room
+                
                 var room = rooms.FirstOrDefault(r => r.Id == booking.RoomId);
                 string roomName = room?.Name ?? $"Room {booking.RoomId}";
                 string statusIcon = booking.Status == BookingStatus.Confirmed ? "✅" :
