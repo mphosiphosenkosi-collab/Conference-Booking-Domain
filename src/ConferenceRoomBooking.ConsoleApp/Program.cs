@@ -11,18 +11,15 @@ namespace ConferenceRoomBooking.ConsoleApp
 {
     class Program
     {
-        private static BookingService _bookingService;
+        private static BookingService _bookingService = null!;
         private static JsonDataService _dataService = new JsonDataService();
         
-        // Assignment 1.3: Changed Main to async Task
         static async Task Main(string[] args)
         {
             Console.Title = "Conference Room Booking System - A1.3 (Robust)";
             
-            // Assignment 1.3: Initialize with data service
             InitializeSystem();
             
-            // Assignment 1.3: Load data asynchronously
             await LoadExistingDataAsync();
             
             bool exitRequested = false;
@@ -30,7 +27,7 @@ namespace ConferenceRoomBooking.ConsoleApp
             while (!exitRequested)
             {
                 DisplayMainMenu();
-                var choice = GetMenuChoice(1, 9); // Added option 8 for A1.3 demos
+                var choice = GetMenuChoice(1, 9);
                 
                 Console.Clear();
                 
@@ -40,7 +37,7 @@ namespace ConferenceRoomBooking.ConsoleApp
                         ViewAllRooms();
                         break;
                     case 2:
-                        await CreateNewBookingAsync(); // Made async
+                        await CreateNewBookingAsync();
                         break;
                     case 3:
                         ViewAllBookings();
@@ -55,14 +52,14 @@ namespace ConferenceRoomBooking.ConsoleApp
                         ViewStatistics();
                         break;
                     case 7:
-                        await SaveDataAsync(); // New async save option
+                        await SaveDataAsync();
                         break;
                     case 8:
-                        await RunA13DemoScenariosAsync(); // Assignment 1.3 demos
+                        await RunA13DemoScenariosAsync();
                         break;
                     case 9:
                         exitRequested = true;
-                        await SaveDataOnExitAsync(); // Auto-save on exit
+                        await SaveDataOnExitAsync();
                         Console.WriteLine("\nThank you for using the Conference Room Booking System!");
                         break;
                 }
@@ -84,11 +81,9 @@ namespace ConferenceRoomBooking.ConsoleApp
             Console.WriteLine("║   Assignment 1.3: Robustness & Async Operations    ║");
             Console.WriteLine("╚══════════════════════════════════════════════════════╝");
             
-            // Assignment 1.3: Initialize with data service
             _bookingService = new BookingService(_dataService);
         }
         
-        // Assignment 1.3: Async data loading
         static async Task LoadExistingDataAsync()
         {
             Console.WriteLine("\nLoading system data...");
@@ -114,7 +109,6 @@ namespace ConferenceRoomBooking.ConsoleApp
         
         static void InitializeSampleData()
         {
-            // Only add sample data if no rooms exist
             if (!_bookingService.ConferenceRooms.Any())
             {
                 Console.WriteLine("Creating sample conference rooms...");
@@ -185,7 +179,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             var rooms = _bookingService.ConferenceRooms;
             
-            // Assignment 1.3: Safe empty collection handling
             if (!rooms.Any())
             {
                 Console.WriteLine("║ No rooms available in the system.                             ║");
@@ -205,7 +198,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             Console.WriteLine($"\nTotal rooms: {rooms.Count}");
         }
         
-        // Assignment 1.3: Made async
         static async Task CreateNewBookingAsync()
         {
             Console.WriteLine("╔══════════════════════════════════════════════════════╗");
@@ -214,7 +206,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             var rooms = _bookingService.ConferenceRooms;
             
-            // Assignment 1.3: Safe empty collection handling
             if (!rooms.Any())
             {
                 Console.WriteLine("\n❌ No rooms available in the system. Please add rooms first.");
@@ -232,14 +223,12 @@ namespace ConferenceRoomBooking.ConsoleApp
             Console.Write("\nSelect Room ID: ");
             string? roomIdInput = Console.ReadLine();
             
-            // Assignment 1.3: Better validation with try-catch
             if (!int.TryParse(roomIdInput, out int roomId))
             {
                 Console.WriteLine("❌ Invalid room ID format.");
                 return;
             }
             
-            // Assignment 1.3: Check if room exists using service method
             var selectedRoom = _bookingService.GetRoomById(roomId);
             if (selectedRoom == null)
             {
@@ -289,13 +278,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             DateTime startTime = date.Add(startSpan);
             DateTime endTime = startTime.AddHours(duration);
             
-            // Assignment 1.3: Now handled by BookingService guard clauses
-            // if (startTime < DateTime.Now)
-            // {
-            //     Console.WriteLine("❌ Cannot book rooms in the past.");
-            //     return;
-            // }
-            
             var request = new BookingRequest
             {
                 RoomId = roomId,
@@ -307,7 +289,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             Console.WriteLine("\nProcessing your booking request...");
             
-            // Assignment 1.3: Try-catch for BookingService exceptions
             try
             {
                 var validation = _bookingService.ValidateBookingRequest(request);
@@ -332,7 +313,6 @@ namespace ConferenceRoomBooking.ConsoleApp
                     Console.WriteLine($"║ Time: {startTime:yyyy-MM-dd HH:mm} to {endTime:HH:mm,-13} ║");
                     Console.WriteLine($"║ Booker: {userName,-36} ║");
                     
-                    // Assignment 1.3: Offer to save after booking
                     Console.WriteLine("╠══════════════════════════════════════════════════════╣");
                     Console.WriteLine("║ Save this booking to file?                          ║");
                     Console.WriteLine("╚══════════════════════════════════════════════════════╝");
@@ -377,7 +357,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             catch (Exception ex)
             {
                 Console.WriteLine($"❌ Unexpected error: {ex.Message}");
-                // Assignment 1.3: Don't swallow exceptions - rethrow or handle properly
             }
         }
         
@@ -390,7 +369,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             var bookings = _bookingService.Bookings;
             var rooms = _bookingService.ConferenceRooms;
             
-            // Assignment 1.3: Safe empty collection handling
             if (!bookings.Any())
             {
                 Console.WriteLine("║ No bookings found in the system.                                         ║");
@@ -403,7 +381,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             foreach (var booking in bookings.OrderByDescending(b => b.StartTime))
             {
-                // Assignment 1.3: Safe LINQ with FirstOrDefault instead of First
                 var room = rooms.FirstOrDefault(r => r.Id == booking.RoomId);
                 string roomName = room?.Name ?? $"Room {booking.RoomId} (Deleted)";
                 string statusIcon = booking.Status == BookingStatus.Confirmed ? "✅" :
@@ -433,7 +410,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             var bookings = _bookingService.Bookings.Where(b => b.Status == BookingStatus.Confirmed);
             var rooms = _bookingService.ConferenceRooms;
             
-            // Assignment 1.3: Safe empty collection handling
             if (!bookings.Any())
             {
                 Console.WriteLine("\nNo confirmed bookings available to cancel.");
@@ -445,7 +421,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             foreach (var booking in bookings)
             {
-                // Assignment 1.3: Safe LINQ with FirstOrDefault
                 var room = rooms.FirstOrDefault(r => r.Id == booking.RoomId);
                 Console.WriteLine($"{booking.Id}. {room?.Name ?? $"Room {booking.RoomId}"} - " +
                                 $"{booking.StartTime:yyyy-MM-dd HH:mm} to {booking.EndTime:HH:mm} " +
@@ -460,7 +435,6 @@ namespace ConferenceRoomBooking.ConsoleApp
                 return;
             }
             
-            // Assignment 1.3: Use BookingService method with exception handling
             try
             {
                 var success = _bookingService.CancelBooking(bookingId);
@@ -469,7 +443,6 @@ namespace ConferenceRoomBooking.ConsoleApp
                 {
                     Console.WriteLine($"\n✅ Booking {bookingId} has been cancelled successfully.");
                     
-                    // Assignment 1.3: Safe room lookup
                     var cancelledBooking = _bookingService.GetBookingById(bookingId);
                     if (cancelledBooking != null)
                     {
@@ -530,7 +503,6 @@ namespace ConferenceRoomBooking.ConsoleApp
                 Console.WriteLine("⚠️  Note: You're checking availability in the past.");
             }
             
-            // Assignment 1.3: Try-catch for BookingService exceptions
             try
             {
                 var availableRooms = _bookingService.GetAvailableRooms(startTime, endTime);
@@ -539,7 +511,6 @@ namespace ConferenceRoomBooking.ConsoleApp
                 Console.WriteLine($"║ Available Rooms from {startTime:HH:mm} to {endTime:HH:mm} on {date:yyyy-MM-dd} ║");
                 Console.WriteLine("╠══════════════════════════════════════════════════════════════════╣");
                 
-                // Assignment 1.3: Safe empty collection handling
                 if (!availableRooms.Any())
                 {
                     Console.WriteLine("║ No rooms available for the selected time slot.                ║");
@@ -566,7 +537,6 @@ namespace ConferenceRoomBooking.ConsoleApp
                     Console.WriteLine("\n⚠️  Booked/Unavailable Rooms:");
                     foreach (var room in bookedRooms)
                     {
-                        // Assignment 1.3: Safe LINQ with null checks
                         var roomBookings = bookings
                             .Where(b => b != null && b.RoomId == room.Id && b.Status == BookingStatus.Confirmed)
                             .Where(b => b.StartTime < endTime && b.EndTime > startTime);
@@ -618,7 +588,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             Console.WriteLine("\n📊 Booking Statistics:");
             Console.WriteLine("─────────────────────");
             
-            // Assignment 1.3: Safe empty collection handling
             if (bookings.Any())
             {
                 Console.WriteLine($"• Total Bookings: {bookings.Count}");
@@ -635,7 +604,6 @@ namespace ConferenceRoomBooking.ConsoleApp
                     Console.WriteLine($"• {statusIcon} {group.Status}: {group.Count}");
                 }
                 
-                // Assignment 1.3: Safe LINQ with null checks
                 var mostBookedRoom = bookings.GroupBy(b => b.RoomId)
                                            .Select(g => new 
                                            { 
@@ -643,7 +611,7 @@ namespace ConferenceRoomBooking.ConsoleApp
                                                Count = g.Count(),
                                                Room = rooms.FirstOrDefault(r => r.Id == g.Key)
                                            })
-                                           .Where(x => x.Room != null) // Filter out null rooms
+                                           .Where(x => x.Room != null)
                                            .OrderByDescending(x => x.Count)
                                            .FirstOrDefault();
                 
@@ -673,7 +641,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             Console.WriteLine("\n🔍 LINQ Query Demonstrations (with safe handling):");
             Console.WriteLine("──────────────────────────────────────────────────");
             
-            // Assignment 1.3: All LINQ queries now have safe handling
             bool hasAnyBookings = bookings.Any();
             Console.WriteLine($"• Has any bookings? {hasAnyBookings}");
             
@@ -694,7 +661,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             Console.WriteLine($"• Rooms with at least one booking: {roomsWithBookings}/{rooms.Count}");
         }
         
-        // Assignment 1.3: New method for async data saving
         static async Task SaveDataAsync()
         {
             Console.WriteLine("\nSaving data to file...");
@@ -715,7 +681,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             }
         }
         
-        // Assignment 1.3: Auto-save on exit
         static async Task SaveDataOnExitAsync()
         {
             Console.WriteLine("\nSaving data before exit...");
@@ -731,12 +696,10 @@ namespace ConferenceRoomBooking.ConsoleApp
             }
             catch (Exception)
             {
-                // Assignment 1.3: Don't throw on exit, just log
                 Console.WriteLine("⚠️  Could not save data due to unexpected error.");
             }
         }
         
-        // Assignment 1.3: Demo scenarios for A1.3 requirements
         static async Task RunA13DemoScenariosAsync()
         {
             Console.WriteLine("╔══════════════════════════════════════════════════════╗");
@@ -791,7 +754,7 @@ namespace ConferenceRoomBooking.ConsoleApp
             }
         }
         
-        static async Task RunGuardClauseDemosAsync()
+        static Task RunGuardClauseDemosAsync()
         {
             Console.WriteLine("╔══════════════════════════════════════════════════════╗");
             Console.WriteLine("║            GUARD CLAUSE DEMONSTRATIONS              ║");
@@ -835,7 +798,7 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             try
             {
-                var nullRequest = (BookingRequest?)null;
+                BookingRequest? nullRequest = null;
                 var result = _bookingService.CreateBooking(nullRequest!);
                 Console.WriteLine("❌ Should have thrown exception for null request");
             }
@@ -861,9 +824,11 @@ namespace ConferenceRoomBooking.ConsoleApp
             {
                 Console.WriteLine($"✅ Guard clause caught: {ex.Message}");
             }
+            
+            return Task.CompletedTask;
         }
         
-        static async Task RunExceptionHandlingDemosAsync()
+        static Task RunExceptionHandlingDemosAsync()
         {
             Console.WriteLine("╔══════════════════════════════════════════════════════╗");
             Console.WriteLine("║         CUSTOM EXCEPTION DEMONSTRATIONS             ║");
@@ -894,7 +859,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             Console.WriteLine("\nDemo 2: Booking Conflict");
             Console.WriteLine("─────────────────────────");
             
-            // First, create a booking
             var room = _bookingService.ConferenceRooms.FirstOrDefault();
             if (room != null)
             {
@@ -911,7 +875,6 @@ namespace ConferenceRoomBooking.ConsoleApp
                     var result1 = _bookingService.CreateBooking(request1);
                     Console.WriteLine("Created first booking successfully");
                     
-                    // Try to create overlapping booking
                     var request2 = new BookingRequest
                     {
                         RoomId = room.Id,
@@ -934,7 +897,7 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             try
             {
-                var success = _bookingService.CancelBooking(99999); // Non-existent booking
+                var success = _bookingService.CancelBooking(99999);
                 Console.WriteLine("❌ Should have thrown BookingNotFoundException");
             }
             catch (BookingNotFoundException ex)
@@ -942,9 +905,11 @@ namespace ConferenceRoomBooking.ConsoleApp
                 Console.WriteLine($"✅ Custom exception caught: {ex.Message}");
                 Console.WriteLine($"   Booking ID: {ex.BookingId}");
             }
+            
+            return Task.CompletedTask;
         }
         
-        static async Task RunSafeLinqDemosAsync()
+        static Task RunSafeLinqDemosAsync()
         {
             Console.WriteLine("╔══════════════════════════════════════════════════════╗");
             Console.WriteLine("║          SAFE LINQ & COLLECTION DEMOS               ║");
@@ -955,7 +920,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             var emptyService = new BookingService();
             
-            // These should not throw exceptions
             var availableRooms = emptyService.GetAvailableRooms(DateTime.Now, DateTime.Now.AddHours(1));
             Console.WriteLine($"Available rooms from empty service: {availableRooms.Count} (should be 0)");
             
@@ -977,13 +941,13 @@ namespace ConferenceRoomBooking.ConsoleApp
             Console.WriteLine("\nDemo 3: Null Checks in LINQ Queries");
             Console.WriteLine("────────────────────────────────────");
             
-            // Create a test booking service
             var testService = new BookingService();
             testService.AddConferenceRoom(1, "Test Room", 10, RoomType.Standard);
             
-            // Simulate a null booking scenario (in real app, this would be prevented)
             var bookings = testService.GetUpcomingBookings();
             Console.WriteLine($"Bookings with null check: {bookings.Count} (safe even if collection contains nulls)");
+            
+            return Task.CompletedTask;
         }
         
         static async Task RunAsyncFileOperationDemosAsync()
@@ -1000,7 +964,6 @@ namespace ConferenceRoomBooking.ConsoleApp
                 string testFilePath = "test_data.json";
                 Console.WriteLine($"Saving to {testFilePath}...");
                 
-                // Create test data
                 var testService = new BookingService();
                 testService.AddConferenceRoom(1, "Demo Room", 10, RoomType.Standard);
                 
@@ -1014,18 +977,18 @@ namespace ConferenceRoomBooking.ConsoleApp
                 
                 testService.CreateBooking(request);
                 
-                // Save
                 await testService.SaveDataToFileAsync(testFilePath);
                 Console.WriteLine("✅ Save successful");
                 
-                // Load into new service
                 var loadedService = new BookingService();
                 await loadedService.LoadDataFromFileAsync(testFilePath);
                 Console.WriteLine($"✅ Load successful: {loadedService.ConferenceRooms.Count} rooms, {loadedService.Bookings.Count} bookings");
                 
-                // Clean up
-                File.Delete(testFilePath);
-                Console.WriteLine($"✅ Test file cleaned up");
+                if (File.Exists(testFilePath))
+                {
+                    File.Delete(testFilePath);
+                    Console.WriteLine($"✅ Test file cleaned up");
+                }
             }
             catch (Exception ex)
             {
@@ -1037,7 +1000,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             try
             {
-                // Try to save with invalid path
                 var testService = new BookingService();
                 await testService.SaveDataToFileAsync("");
                 Console.WriteLine("❌ Should have thrown exception for empty path");
@@ -1049,7 +1011,6 @@ namespace ConferenceRoomBooking.ConsoleApp
             
             try
             {
-                // Try to load non-existent file
                 var testService = new BookingService();
                 await testService.LoadDataFromFileAsync("non_existent_file.json");
                 Console.WriteLine("❌ Should have thrown exception for missing file");
@@ -1074,7 +1035,7 @@ namespace ConferenceRoomBooking.ConsoleApp
                 int index = i;
                 tasks.Add(Task.Run(async () =>
                 {
-                    await Task.Delay(100); // Simulate work
+                    await Task.Delay(100);
                     Console.WriteLine($"  Task {index} completed asynchronously");
                 }));
             }
