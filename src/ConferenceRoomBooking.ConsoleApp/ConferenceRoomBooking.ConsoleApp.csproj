@@ -1,9 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup>
-    <ProjectReference Include="..\ConferenceRoomBooking.Domain\ConferenceRoomBooking.Domain.csproj" />
-    <ProjectReference Include="..\ConferenceRoomBooking.Services\ConferenceRoomBooking.Services.csproj" />
-  </ItemGroup>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,5 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ConferenceRoomBooking.Domain\ConferenceRoomBooking.Domain.csproj" />
+    <ProjectReference Include="..\ConferenceRoomBooking.Logic\ConferenceRoomBooking.Logic.csproj" />
+  </ItemGroup>
 
 </Project>
