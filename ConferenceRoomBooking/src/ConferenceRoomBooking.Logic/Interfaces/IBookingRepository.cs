@@ -1,10 +1,10 @@
 using ConferenceRoomBooking.Domain.Entities;
 
-namespace ConferenceRoomBooking.Persistence.Repositories;
+namespace ConferenceRoomBooking.Logic.Interfaces;
 
 public interface IBookingRepository
 {
-    Task<Booking> GetByIdAsync(int id);
+    Task<Booking?> GetByIdAsync(int id);
     Task<IEnumerable<Booking>> GetAllAsync();
     Task<Booking> AddAsync(Booking booking);
     Task UpdateAsync(Booking booking);

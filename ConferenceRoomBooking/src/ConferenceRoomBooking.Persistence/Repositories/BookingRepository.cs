@@ -1,9 +1,10 @@
 using ConferenceRoomBooking.Domain.Entities;
 using ConferenceRoomBooking.Persistence.Stores;
+using ConferenceRoomBooking.Logic.Interfaces;
 
 namespace ConferenceRoomBooking.Persistence.Repositories;
 
-public class BookingRepository : IBookingRepository
+public class BookingRepository : IBookingRepository  // Now references Logic.Interfaces
 {
     private readonly JsonDataStore _dataStore;
 
@@ -12,7 +13,7 @@ public class BookingRepository : IBookingRepository
         _dataStore = dataStore ?? throw new ArgumentNullException(nameof(dataStore));
     }
 
-    public Task<Booking> GetByIdAsync(int id)
+    public Task<Booking?> GetByIdAsync(int id)
     {
         var booking = _dataStore.GetBookings().FirstOrDefault(b => b.Id == id);
         return Task.FromResult(booking);

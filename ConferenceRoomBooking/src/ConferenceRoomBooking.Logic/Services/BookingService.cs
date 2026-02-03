@@ -3,7 +3,6 @@ using ConferenceRoomBooking.Domain.Entities;
 using ConferenceRoomBooking.Domain.Exceptions;
 using ConferenceRoomBooking.Domain.Enums;
 using ConferenceRoomBooking.Logic.Interfaces;
-using ConferenceRoomBooking.Persistence.Repositories;
 
 namespace ConferenceRoomBooking.Logic.Services;
 
@@ -39,7 +38,6 @@ public class BookingService : IBookingService
         try
         {
             // Note: For now, we'll use RoomId = 1 as placeholder
-            // In a real app, you'd look up the room by name
             const int roomId = 1;  // TODO: Implement room lookup
             
             // 2. Check for overlaps
@@ -84,7 +82,6 @@ public class BookingService : IBookingService
 
     public async Task<IEnumerable<Booking>> GetBookingsByRoomAsync(string roomName)
     {
-        // TODO: Implement room lookup by name
         const int roomId = 1;
         return await _bookingRepository.GetByRoomIdAsync(roomId);
     }
@@ -110,14 +107,12 @@ public class BookingService : IBookingService
 
     public async Task<bool> CheckRoomAvailabilityAsync(string roomName, DateTime start, DateTime end)
     {
-        // TODO: Implement room lookup by name
         const int roomId = 1;
         return !await _bookingRepository.HasOverlapAsync(roomId, start, end);
     }
 
     public Task<IEnumerable<ConferenceRoom>> GetAllRoomsAsync()
     {
-        // TODO: Implement room repository
         return Task.FromResult(Enumerable.Empty<ConferenceRoom>());
     }
 }
