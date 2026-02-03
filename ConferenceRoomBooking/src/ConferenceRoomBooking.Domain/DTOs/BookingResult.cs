@@ -4,12 +4,12 @@ namespace ConferenceRoomBooking.Domain.DTOs;
 
 public class BookingResult
 {
-    public Booking Booking { get; }
+    public Booking? Booking { get; }  // Make nullable
     public bool Success { get; }
     public string Message { get; }
     public List<string> Errors { get; }
 
-    public BookingResult(Booking booking, bool success, string message = "")
+    public BookingResult(Booking? booking, bool success, string message = "")
     {
         Booking = booking;
         Success = success;
@@ -17,9 +17,9 @@ public class BookingResult
         Errors = new List<string>();
     }
 
-    public BookingResult(bool success, string message, List<string> errors)
+    public BookingResult(bool success, string message, List<string>? errors = null)
     {
-        Booking = null!;
+        Booking = null;
         Success = success;
         Message = message;
         Errors = errors ?? new List<string>();
@@ -28,6 +28,6 @@ public class BookingResult
     public static BookingResult SuccessResult(Booking booking, string message = "Booking created successfully")
         => new(booking, true, message);
 
-    public static BookingResult FailureResult(string message, List<string> errors = null)
-        => new(false, message, errors ?? new List<string>());
+    public static BookingResult FailureResult(string message, List<string>? errors = null)
+        => new(false, message, errors);
 }

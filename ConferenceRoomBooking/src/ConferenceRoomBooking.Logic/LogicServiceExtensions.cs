@@ -9,8 +9,7 @@ public static class LogicServiceExtensions
     public static IServiceCollection AddLogicServices(this IServiceCollection services)
     {
         services.AddScoped<IBookingService, BookingService>();
-        services.AddScoped<IRoomService, RoomService>();
-        
+        // Add other services here as needed
         return services;
     }
 }

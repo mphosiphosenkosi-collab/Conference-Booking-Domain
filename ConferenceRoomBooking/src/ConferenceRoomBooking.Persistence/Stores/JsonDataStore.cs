@@ -9,7 +9,7 @@ public class JsonDataStore
     private readonly JsonSerializerOptions _jsonOptions;
     private List<Booking> _bookings;
     private List<ConferenceRoom> _rooms;
-    private readonly object _lock = new object();
+    private readonly object _lock = new();
 
     public JsonDataStore(string filePath)
     {
@@ -40,8 +40,7 @@ public class JsonDataStore
         {
             if (!File.Exists(_filePath))
             {
-                // Initialize with empty data structure
-                var initialData = new
+                var initialData = new JsonData
                 {
                     Bookings = new List<Booking>(),
                     Rooms = new List<ConferenceRoom>()
@@ -62,7 +61,6 @@ public class JsonDataStore
         }
         catch (JsonException)
         {
-            // If JSON is corrupted, start fresh
             _bookings = new List<Booking>();
             _rooms = new List<ConferenceRoom>();
         }
@@ -77,7 +75,6 @@ public class JsonDataStore
         }
     }
 
-    // Booking operations
     public List<Booking> GetBookings() => _bookings.ToList();
     public void AddBooking(Booking booking)
     {
@@ -101,7 +98,6 @@ public class JsonDataStore
         SaveData();
     }
 
-    // Room operations
     public List<ConferenceRoom> GetRooms() => _rooms.ToList();
     public void AddRoom(ConferenceRoom room)
     {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ConferenceRoomBooking.Domain.DTOs;
+using ConferenceRoomBooking.Domain.Entities;
 using ConferenceRoomBooking.Logic.Interfaces;
 
 namespace ConferenceRoomBooking.API.Controllers;
@@ -24,14 +25,14 @@ public class BookingsController : ControllerBase
             
             if (result.Success)
             {
-                return CreatedAtAction(nameof(GetBooking), new { id = result.Booking.Id }, result);
+                return CreatedAtAction(nameof(GetBooking), new { id = result.Booking?.Id }, result);
             }
             
             return BadRequest(result);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new BookingResult(false, $"Internal server error: {ex.Message}", new List<string>()));
+            return StatusCode(500, new BookingResult(false, $"Internal server error: {ex.Message}", null));
         }
     }
 

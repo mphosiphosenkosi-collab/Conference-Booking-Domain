@@ -9,10 +9,11 @@ public static class PersistenceServiceExtensions
 {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services, string dataFilePath)
     {
+        // Register JsonDataStore as singleton (single instance for entire app)
         services.AddSingleton<JsonDataStore>(provider => new JsonDataStore(dataFilePath));
         
+        // Register repositories
         services.AddScoped<IBookingRepository, BookingRepository>();
-        services.AddScoped<IRoomRepository, RoomRepository>();
         
         return services;
     }
