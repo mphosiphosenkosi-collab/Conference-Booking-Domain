@@ -1,67 +1,96 @@
-using System;
+using ConferenceRoomBooking.Domain.DTOs;
 using ConferenceRoomBooking.Domain.Entities;
-using ConferenceRoomBooking.Domain.Models;
-using ConferenceRoomBooking.Logic.Services;
+using ConferenceRoomBooking.Domain.Enums;
+using ConferenceRoomBooking.Logic;        // For AddLogicServices()
+using ConferenceRoomBooking.Persistence;  // For AddPersistenceServices()
+using Microsoft.Extensions.DependencyInjection;
 
-namespace ConferenceRoomBooking.ConsoleApp
+namespace ConferenceRoomBooking.ConsoleApp;
+
+class Program
 {
-    class Program
+    static async Task Main(string[] args)
     {
-        static void Main(string[] args)
+        Console.WriteLine("Conference Room Booking System");
+        Console.WriteLine("===============================\n");
+        
+        // Get the data file path
+        var dataFilePath = GetDataFilePath();
+        Console.WriteLine($"Data file: {dataFilePath}\n");
+        
+        // Setup dependency injection
+        var serviceProvider = new ServiceCollection()
+            .AddLogicServices()           // Now this will be found!
+            .AddPersistenceServices(dataFilePath)
+            .BuildServiceProvider();
+        
+        var bookingService = serviceProvider.GetRequiredService<ConferenceRoomBooking.Logic.Interfaces.IBookingService>();
+        
+        // Demo: Create a booking
+        Console.WriteLine("1. Creating a booking...");
+        
+        var request = new BookingRequest
         {
-            Console.WriteLine("=== Conference Room Booking System ===");
-            Console.WriteLine("Testing basic functionality...\n");
+            EmployeeId = "EMP001",
+            RoomName = "Boardroom",
+            StartTime = DateTime.Now.AddHours(1),
+            EndTime = DateTime.Now.AddHours(2)
+        };
+        
+        try
+        {
+            var result = await bookingService.CreateBookingAsync(request);
             
-            try
+            if (result.Success)
             {
-                // Create a room
-                var room = new ConferenceRoom("Boardroom A", 20, "Meeting");
-                Console.WriteLine($"Created room: {room.Name}, Capacity: {room.Capacity}");
-                
-                // Create a booking request
-                var request = new BookingRequest(
-                    "EMP001",
-                    "Boardroom A",
-                    DateTime.Now.AddHours(1),
-                    DateTime.Now.AddHours(2)
-                );
-                Console.WriteLine($"Created booking request for employee: {request.EmployeeId}");
-                
-                // Try to create booking manager
-                Console.WriteLine("\nAttempting to create BookingManager...");
-                
-                // Since we don't have IDataService implemented yet, we'll pass null
-                // In real implementation, you'd inject a proper service
-                var bookingManager = new BookingManager();
-                Console.WriteLine("✅ BookingManager created successfully!");
-                
-                // Test BookingOverlapException
-                Console.WriteLine("\nTesting exception references...");
-                try
-                {
-                    throw new ConferenceRoomBooking.Logic.Exceptions.BookingOverlapException("Test exception");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"✅ Exception thrown and caught: {ex.GetType().Name}");
-                }
-                
-                Console.WriteLine("\n✅ ALL TESTS PASSED!");
-                Console.WriteLine("\nYour project structure is CORRECT and READY for Web API!");
-                Console.WriteLine("\nNext steps:");
-                Console.WriteLine("1. Add Web API project");
-                Console.WriteLine("2. Create Controllers");
-                Console.WriteLine("3. Add Swagger/OpenAPI");
-                Console.WriteLine("4. Implement Persistence with EF Core");
+                Console.WriteLine($"✅ Booking created successfully!");
+                Console.WriteLine($"   Booking ID: {result.Booking?.Id}");
+                Console.WriteLine($"   Employee: {result.Booking?.EmployeeId}");
+                Console.WriteLine($"   Room: {result.Booking?.RoomId}");
+                Console.WriteLine($"   Time: {result.Booking?.StartTime} to {result.Booking?.EndTime}");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"\n❌ Error: {ex.Message}");
-                Console.WriteLine($"Stack: {ex.StackTrace}");
+                Console.WriteLine($"❌ Booking failed: {result.Message}");
             }
-            
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ReadKey();
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error: {ex.Message}");
+        }
+        
+        // Demo: Get all bookings
+        Console.WriteLine("\n2. Listing all bookings...");
+        
+        var bookings = await bookingService.GetAllBookingsAsync();
+        
+        if (bookings.Any())
+        {
+            foreach (var booking in bookings)
+            {
+                Console.WriteLine($"   • Booking #{booking.Id}: {booking.EmployeeId} in Room {booking.RoomId}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("   No bookings found.");
+        }
+        
+        Console.WriteLine("\n=== DEMO COMPLETE ===");
+    }
+    
+    private static string GetDataFilePath()
+    {
+        // For ConsoleApp, the path is relative to where it runs
+        var projectDir = Directory.GetCurrentDirectory();
+        var solutionDir = Directory.GetParent(projectDir)?.Parent?.FullName;
+        
+        if (solutionDir != null)
+        {
+            return Path.Combine(solutionDir, "src", "ConferenceRoomBooking.Persistence", "Data", "bookings_data.json");
+        }
+        
+        // Fallback path
+        return Path.Combine("..", "..", "src", "ConferenceRoomBooking.Persistence", "Data", "bookings_data.json");
     }
 }

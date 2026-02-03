@@ -8,8 +8,9 @@ public static class LogicServiceExtensions
 {
     public static IServiceCollection AddLogicServices(this IServiceCollection services)
     {
+        // Register business logic services
         services.AddScoped<IBookingService, BookingService>();
-        // Add other services here as needed
+        
         return services;
     }
 }

@@ -75,6 +75,7 @@ public class JsonDataStore
         }
     }
 
+    // Booking operations
     public List<Booking> GetBookings() => _bookings.ToList();
     public void AddBooking(Booking booking)
     {
@@ -98,6 +99,7 @@ public class JsonDataStore
         SaveData();
     }
 
+    // Room operations
     public List<ConferenceRoom> GetRooms() => _rooms.ToList();
     public void AddRoom(ConferenceRoom room)
     {
@@ -107,7 +109,7 @@ public class JsonDataStore
     
     public void RemoveRoom(int id)
     {
-        _rooms.RemoveAll(r => r.Id == id);
+        _rooms.RemoveAll(r => r.Id == id);  // Now uses Id property
         SaveData();
     }
 

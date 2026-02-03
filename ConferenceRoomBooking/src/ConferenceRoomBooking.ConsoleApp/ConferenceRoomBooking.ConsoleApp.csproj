@@ -10,6 +10,11 @@
   <ItemGroup>
     <ProjectReference Include="..\ConferenceRoomBooking.Domain\ConferenceRoomBooking.Domain.csproj" />
     <ProjectReference Include="..\ConferenceRoomBooking.Logic\ConferenceRoomBooking.Logic.csproj" />
+    <ProjectReference Include="..\ConferenceRoomBooking.Persistence\ConferenceRoomBooking.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
   </ItemGroup>
 
 </Project>
