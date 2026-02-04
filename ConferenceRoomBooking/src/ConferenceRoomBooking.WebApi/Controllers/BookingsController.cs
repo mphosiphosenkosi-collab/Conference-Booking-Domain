@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ConferenceRoomBooking.Domain.Entities;
 using ConferenceRoomBooking.Domain.DTOs;
 using ConferenceRoomBooking.Logic.Interfaces;
+using System.Diagnostics;
 
 namespace ConferenceRoomBooking.WebApi.Controllers;
 
@@ -22,7 +23,7 @@ public class BookingsController : ControllerBase
     // GET: api/bookings
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<BookingResponse>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ProblemDetailsResponse), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IEnumerable<BookingResponse>>> GetAllBookings()
     {
         try
@@ -48,23 +49,26 @@ public class BookingsController : ControllerBase
         {
             _logger.LogError(ex, "Error retrieving bookings");
 
-            // 500 Internal Server Error - WITHOUT exception details
-            return StatusCode(500, new
-            {
-                Message = "Internal server error",
-                Status = 500
-            });
+            // 500 Internal Server Error using ProblemDetailsResponse
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                ProblemDetailsResponse.InternalServerError(
+                    traceId: Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                    instance: HttpContext.Request.Path
+                ));
         }
     }
 
     // POST: api/bookings
     [HttpPost]
     [ProducesResponseType(typeof(BookingResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(object), StatusCodes.Status422UnprocessableEntity)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ProblemDetailsResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetailsResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ProblemDetailsResponse), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateBooking([FromBody] BookingRequest request)
     {
+        var traceId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+        
         try
         {
             _logger.LogInformation("POST /api/bookings - Creating booking for {EmployeeId}", request?.EmployeeId);
@@ -101,52 +105,70 @@ public class BookingsController : ControllerBase
                     result.ErrorCode == "INVALID_TIME_RANGE" ||
                     result.ErrorCode == "PAST_START_TIME")
                 {
-                    return UnprocessableEntity(new
-                    {
-                        Message = result.Message,
-                        ErrorCode = result.ErrorCode,
-                        Errors = result.Errors,
-                        Status = 422
-                    });
+                    return UnprocessableEntity(
+                        ProblemDetailsResponse.BusinessRuleViolation(
+                            errorCode: result.ErrorCode,
+                            detail: result.Message,
+                            suggestions: new List<string> 
+                            { 
+                                "Try a different time slot",
+                                "Choose a different room"
+                            },
+                            instance: HttpContext.Request.Path,
+                            traceId: traceId
+                        ));
                 }
             }
 
+            // Convert List<string> Errors to Dictionary<string, string[]>
+            var errorsDict = result.Errors?.Any() == true
+                ? new Dictionary<string, string[]> { { "general", result.Errors.ToArray() } }
+                : null;
+
             // Validation errors -> 400
-            return BadRequest(new
-            {
-                Message = result.Message,
-                ErrorCode = result.ErrorCode,
-                Errors = result.Errors,
-                Status = 400
-            });
+            return BadRequest(
+                ProblemDetailsResponse.ValidationError(
+                    detail: result.Message,
+                    errors: errorsDict,
+                    instance: HttpContext.Request.Path,
+                    traceId: traceId
+                ));
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating booking");
 
-            // 500 Internal Server Error - WITHOUT BookingResult
-            return StatusCode(500, new
-            {
-                Message = "Internal server error",
-                Status = 500
-            });
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                ProblemDetailsResponse.InternalServerError(
+                    traceId: traceId,
+                    instance: HttpContext.Request.Path
+                ));
         }
     }
 
     [HttpGet("{id}")]
     [ProducesResponseType(typeof(BookingResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ProblemDetailsResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetailsResponse), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<BookingResponse>> GetBooking(int id)
     {
+        var traceId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+        
         try
         {
             var booking = await _bookingService.GetBookingByIdAsync(id);
 
             if (booking == null)
             {
-                // 404 Not Found
-                return NotFound();
+                // 404 Not Found with ProblemDetailsResponse
+                return NotFound(
+                    ProblemDetailsResponse.NotFound(
+                        resourceType: "Booking",
+                        resourceId: id.ToString(),
+                        instance: HttpContext.Request.Path,
+                        traceId: traceId
+                    ));
             }
 
             // 200 OK
@@ -166,12 +188,12 @@ public class BookingsController : ControllerBase
         {
             _logger.LogError(ex, $"Error retrieving booking with id {id}");
 
-            // 500 Internal Server Error
-            return StatusCode(500, new
-            {
-                Message = "Internal server error",
-                Status = 500
-            });
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                ProblemDetailsResponse.InternalServerError(
+                    traceId: traceId,
+                    instance: HttpContext.Request.Path
+                ));
         }
     }
 
@@ -189,26 +211,6 @@ public class BookingsController : ControllerBase
         };
     }
 
-    private IActionResult MapErrorResponse(BookingResult result)
-    {
-        if (!string.IsNullOrEmpty(result.ErrorCode) &&
-            (result.ErrorCode == "ROOM_UNAVAILABLE" ||
-             result.ErrorCode == "INVALID_TIME_RANGE" ||
-             result.ErrorCode == "PAST_START_TIME"))
-        {
-            return UnprocessableEntity(new
-            {
-                Message = result.Message,
-                ErrorCode = result.ErrorCode,
-                Status = 422
-            });
-        }
-
-        return BadRequest(new
-        {
-            Message = result.Message,
-            ErrorCode = result.ErrorCode,
-            Status = 400
-        });
-    }
+    // Note: MapErrorResponse method is no longer needed since we're using 
+    // ProblemDetailsResponse directly in each return statement
 }

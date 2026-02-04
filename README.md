@@ -1,4 +1,5 @@
-📖 Conference Room Booking System - Professional README
+# 📖 Conference Room Booking System 
+
 📋 Table of Contents
 Project Overview
 
@@ -101,17 +102,22 @@ Visual Studio 2022, VS Code, or Rider
 
 Installation
 bash
+
 # Clone repository
+
 git clone <repository-url>
 cd ConferenceRoomBooking
 
 # Restore dependencies
+
 dotnet restore
 
 # Build solution
+
 dotnet build
 
 # Run Web API
+
 dotnet run --project src/ConferenceRoomBooking.WebApi
 Access Points
 Swagger UI: https://localhost:5001/swagger
@@ -134,10 +140,13 @@ GET	/api/health	API health status	200
 GET	/api/bookings/{id}	Single resource with 404	200, 404
 Example Requests
 bash
+
 # Health check
+
 curl -X GET "https://localhost:5001/api/health"
 
 # Create booking
+
 curl -X POST "https://localhost:5001/api/bookings" \
   -H "Content-Type: application/json" \
   -d '{
@@ -148,9 +157,11 @@ curl -X POST "https://localhost:5001/api/bookings" \
   }'
 
 # Get booking by ID
+
 curl -X GET "https://localhost:5001/api/bookings/1"
 
 # Get non-existent booking (returns 404)
+
 curl -X GET "https://localhost:5001/api/bookings/999999"
 🎯 Extra Credit Implementation
 ✅ Completed Requirements
@@ -198,29 +209,41 @@ public async Task<ActionResult<BookingResponse>> GetBooking(int id)
 🧪 Testing & Verification
 Running Tests
 bash
+
 # Run all tests
+
 dotnet test
 
 # Run specific test project
+
 dotnet test src/ConferenceRoomBooking.Logic.Tests
 Verification Scripts
 bash
+
 # Check project structure
+
 ./final_structure_check.sh
 
 # Test API behavior
+
 ./demonstrate_api_behavior.sh
 
 # Verify dependencies (no circular references)
+
 dotnet list src/ConferenceRoomBooking.Logic reference
 Manual Testing with cURL
 bash
+
 # Test health endpoint
+
 curl -X GET "https://localhost:5001/api/health" -k
 
 # Test 404 response
+
 curl -X GET "https://localhost:5001/api/bookings/999999" -k -v
+
 # Should return: HTTP/1.1 404 Not Found
+
 👨‍💻 Development Guidelines
 Build Commands
 bash
