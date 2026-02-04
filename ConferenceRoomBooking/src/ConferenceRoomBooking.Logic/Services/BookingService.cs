@@ -4,6 +4,7 @@ using ConferenceRoomBooking.Domain.Exceptions;
 using ConferenceRoomBooking.Domain.Enums;
 using ConferenceRoomBooking.Logic.Interfaces;
 
+
 namespace ConferenceRoomBooking.Logic.Services;
 
 public class BookingService : IBookingService
@@ -19,13 +20,16 @@ public class BookingService : IBookingService
     {
         var errors = new List<string>();
 
-        // 1. Validate request
-        if (request.StartTime >= request.EndTime)
-            errors.Add("Start time must be before end time");
-        
-        if (request.StartTime < DateTime.UtcNow)
-            errors.Add("Start time cannot be in the past");
+        // 1. Validate request with SPECIFIC ERROR CODES (for HTTP status mapping)
 
+        // Business rule validations - return specific error codes (will become 422)
+        if (request.StartTime >= request.EndTime)
+            return BookingResult.InvalidTimeRange(); // This maps to 422
+
+        if (request.StartTime < DateTime.UtcNow.AddMinutes(-5)) // Allow 5-minute buffer
+            return BookingResult.PastStartTime(); // This maps to 422
+
+        // Basic field validations - these are validation errors (will become 400)
         if (string.IsNullOrWhiteSpace(request.EmployeeId))
             errors.Add("Employee ID is required");
 
@@ -33,24 +37,24 @@ public class BookingService : IBookingService
             errors.Add("Room name is required");
 
         if (errors.Any())
-            return BookingResult.FailureResult("Validation failed", errors);
+            return BookingResult.FailureResult("Validation failed", "VALIDATION_ERROR", errors);
 
         try
         {
             // Note: For now, we'll use RoomId = 1 as placeholder
             const int roomId = 1;  // TODO: Implement room lookup
-            
+
             // 2. Check for overlaps
             bool hasOverlap = await _bookingRepository.HasOverlapAsync(
                 roomId, request.StartTime, request.EndTime);
-            
+
             if (hasOverlap)
-                throw new BookingOverlapException($"Room '{request.RoomName}' is already booked for the requested time");
+                return BookingResult.RoomUnavailable(request.RoomName, request.StartTime, request.EndTime); // This maps to 422
 
             // 3. Create booking
             var bookings = await _bookingRepository.GetAllAsync();
             var nextId = bookings.Any() ? bookings.Max(b => b.Id) + 1 : 1;
-            
+
             var booking = new Booking(
                 nextId,
                 request.EmployeeId,
@@ -61,16 +65,23 @@ public class BookingService : IBookingService
 
             // 4. Save booking
             var savedBooking = await _bookingRepository.AddAsync(booking);
-            
+
             return BookingResult.SuccessResult(savedBooking, "Booking created successfully");
         }
         catch (BookingOverlapException ex)
         {
-            return BookingResult.FailureResult(ex.Message);
+            // If we still get this exception somehow, convert to proper result
+            return BookingResult.RoomUnavailable(request.RoomName, request.StartTime, request.EndTime);
         }
         catch (Exception ex)
         {
-            return BookingResult.FailureResult($"Internal error: {ex.Message}");
+            // Log the full exception for debugging
+           // _logger.LogError(ex, "Unexpected error creating booking");
+
+            return BookingResult.FailureResult(
+                "An unexpected error occurred while creating the booking",
+                "INTERNAL_ERROR",
+                new List<string> { ex.Message });
         }
     }
 
@@ -92,16 +103,25 @@ public class BookingService : IBookingService
         {
             var booking = await _bookingRepository.GetByIdAsync(id);
             if (booking == null)
-                return BookingResult.FailureResult($"Booking with ID {id} not found");
+                return BookingResult.FailureResult($"Booking with ID {id} not found", "NOT_FOUND");
 
             booking.Cancel();
             await _bookingRepository.UpdateAsync(booking);
-            
+
             return BookingResult.SuccessResult(booking, "Booking cancelled successfully");
+        }
+        catch (InvalidOperationException ex) when (ex.Message.Contains("Cannot cancel"))
+        {
+            return BookingResult.FailureResult(
+                $"Cannot cancel booking with current status: {ex.Message}",
+                "INVALID_STATUS",
+                new List<string> { ex.Message });
         }
         catch (Exception ex)
         {
-            return BookingResult.FailureResult($"Failed to cancel booking: {ex.Message}");
+            return BookingResult.FailureResult(
+                $"Failed to cancel booking: {ex.Message}",
+                "INTERNAL_ERROR");
         }
     }
 
