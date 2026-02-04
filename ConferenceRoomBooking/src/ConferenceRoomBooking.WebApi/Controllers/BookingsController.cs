@@ -17,7 +17,7 @@ public class BookingsController : ControllerBase
     {
         _bookingService = bookingService;
         _logger = logger;
-        
+
         _logger.LogInformation("BookingsController initialized with service injection");
     }
 
@@ -32,10 +32,10 @@ public class BookingsController : ControllerBase
         try
         {
             _logger.LogInformation("GET /api/bookings - Retrieving all bookings");
-            
+
             // Controller coordinates work only - NO business rules
             var bookings = await _bookingService.GetAllBookingsAsync();
-            
+
             // Requirement 5: Return domain data as JSON
             return Ok(bookings);
         }
@@ -58,7 +58,7 @@ public class BookingsController : ControllerBase
         try
         {
             _logger.LogInformation("POST /api/bookings - Creating booking for {EmployeeId}", request?.EmployeeId);
-            
+
             if (request == null)
             {
                 return BadRequest(new BookingResult(false, "Booking request is required"));
@@ -66,13 +66,13 @@ public class BookingsController : ControllerBase
 
             // Controller coordinates work only - NO business rules
             var result = await _bookingService.CreateBookingAsync(request);
-            
+
             // Requirement 5: Return domain data as JSON
             if (result.Success)
             {
                 return CreatedAtAction(nameof(GetAllBookings), result);
             }
-            
+
             return BadRequest(result);
         }
         catch (Exception ex)
@@ -82,20 +82,18 @@ public class BookingsController : ControllerBase
         }
     }
 
-    // GET: api/bookings/test (for verification only)
-    [HttpGet("test")]
-    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
-    public IActionResult Test()
+    [HttpGet("{id}")]
+    public async Task<ActionResult<BookingResponse>> GetBooking(int id)
     {
-        return Ok(new { 
-            message = "BookingsController endpoints:",
-            endpoints = new[] {
-                "GET /api/bookings - Get all bookings (Returns: Booking[] as JSON)",
-                "POST /api/bookings - Create booking (Accepts: BookingRequest JSON, Returns: BookingResult JSON)",
-                "GET /api/bookings/test - This test endpoint"
-            },
-            status = "Operational",
-            requirement = "5 - Returning Data via HTTP satisfied: All endpoints return JSON"
-        });
+        var booking = await _bookingService.GetBookingByIdAsync(id);
+
+        if (booking == null)
+        {
+            return NotFound(); // This returns 404
+        }
+
+        return Ok(booking);
     }
+
+
 }
