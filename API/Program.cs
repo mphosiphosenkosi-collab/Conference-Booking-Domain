@@ -1,6 +1,6 @@
 using ConferenceRoomBooking.Logic.Interfaces;
 using ConferenceRoomBooking.Logic.Services;
-using ConferenceRoomBooking.Persistence.Repositories;
+using ConferenceRoomBooking.Persistence.Stores;
 using ConferenceRoomBooking.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Register dependencies
-builder.Services.AddScoped<IBookingService, BookingService>();
-builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddSingleton(new BookingFileStore("data/bookings.json"));
 
 // Add logging
 builder.Services.AddLogging();

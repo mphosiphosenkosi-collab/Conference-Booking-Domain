@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.WebApi", "API\ConferenceRoomBooking.WebApi.csproj", "{73053D4C-9637-4ACC-95FC-51C1724A8AE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.Domain", "ConferenceBookingDomain\ConferenceRoomBooking.Domain.csproj", "{48B3FE0C-0C1B-4F65-993A-21AAA7E945CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73053D4C-9637-4ACC-95FC-51C1724A8AE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73053D4C-9637-4ACC-95FC-51C1724A8AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73053D4C-9637-4ACC-95FC-51C1724A8AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73053D4C-9637-4ACC-95FC-51C1724A8AE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48B3FE0C-0C1B-4F65-993A-21AAA7E945CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48B3FE0C-0C1B-4F65-993A-21AAA7E945CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48B3FE0C-0C1B-4F65-993A-21AAA7E945CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48B3FE0C-0C1B-4F65-993A-21AAA7E945CE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
