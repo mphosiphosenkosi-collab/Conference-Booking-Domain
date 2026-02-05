@@ -25,31 +25,11 @@ namespace API.Controllers
         public async Task<IActionResult> GetAll()
         {
             // Assuming BookingManager has a method like GetAllBookingsAsync
-            var bookings = await _manager.GetAllBookingsAsync(); 
+            var bookings = await _manager.GetAllBookingsAsync();
             return Ok(bookings);
         }
 
-        // POST /api/bookings
-        [HttpPost]
-        public async Task<IActionResult> Book([FromBody] CreateBookingDto dto)
-        {
-            // Map DTO to Domain entity
-            var bookingEntity = new BookingRequest  // Fully qualify to avoid conflicts
-            {
-                Room = dto.Room,
-                StartTime = dto.StartTime,
-                EndTime = dto.EndTime
-            };
+      
 
-            // Assuming BookingManager has a method like CreateBookingAsync
-              var booking = await _manager.CreateBookingAsync(bookingEntity);
-
-
-            return Ok(new
-            {
-                Message = "Booking created successfully",
-                Booking = booking
-            });
-        }
     }
 }
