@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.Domai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.Logic", "ConferenceRoomBooking\ConferenceRoomBooking.Logic\ConferenceRoomBooking.Logic.csproj", "{EA26A794-7B4A-43E7-A5E7-734789953410}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{ECE9F5A5-CAE4-4B52-AAE6-DC8A095AD358}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API\API.csproj", "{36458AFA-527D-4BA6-BB3F-31DB3585E4DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +30,14 @@ Global
 		{EA26A794-7B4A-43E7-A5E7-734789953410}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA26A794-7B4A-43E7-A5E7-734789953410}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA26A794-7B4A-43E7-A5E7-734789953410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36458AFA-527D-4BA6-BB3F-31DB3585E4DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36458AFA-527D-4BA6-BB3F-31DB3585E4DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36458AFA-527D-4BA6-BB3F-31DB3585E4DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36458AFA-527D-4BA6-BB3F-31DB3585E4DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{28E4554A-4913-45B5-ADEE-C571111380D7} = {94B59A8A-2332-4272-B884-F2134422FF2E}
 		{EA26A794-7B4A-43E7-A5E7-734789953410} = {94B59A8A-2332-4272-B884-F2134422FF2E}
+		{36458AFA-527D-4BA6-BB3F-31DB3585E4DB} = {ECE9F5A5-CAE4-4B52-AAE6-DC8A095AD358}
 	EndGlobalSection
 EndGlobal
