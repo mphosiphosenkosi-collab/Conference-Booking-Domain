@@ -3,11 +3,16 @@ using System.Collections.Generic;
 
 namespace ConferenceRoomBooking.Domain
 {
+    /// <summary>
+    /// Room types used by BookingManager and ConferenceRoom
+    /// </summary>
     public enum RoomType
     {
-        Boardroom,
-        MeetingRoom,
-        Auditorium
+        Small,      // 2-8 people
+        Medium,     // 9-20 people
+        Large,      // 21-50 people
+        Conference, // 51-200 people
+        Boardroom   // 8-15 people
     }
 
     public class ConferenceRoom
