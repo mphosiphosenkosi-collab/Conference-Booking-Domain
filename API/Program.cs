@@ -1,5 +1,6 @@
 using ConferenceRoomBooking.Logic;
-using Microsoft.OpenApi.Models; // Make sure this is here
+using Microsoft.OpenApi.Models; 
+using API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,9 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddSingleton<BookingManager>();
 
 var app = builder.Build();
+
+// ✅ Use middleware AFTER app is built
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure HTTP request pipeline
 if (app.Environment.IsDevelopment())
