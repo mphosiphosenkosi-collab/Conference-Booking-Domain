@@ -1,80 +1,91 @@
 using System.Net;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using API.Models; // <- our ErrorResponse
-using ConferenceRoomBooking.Domain.Exceptions; // <- our domain exceptions
+using API.Models;
+using ConferenceRoomBooking.Domain.Exceptions;
 
-namespace API.Middleware;
-
-public class ExceptionHandlingMiddleware
+namespace API.Middleware
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-
-    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+    public class ExceptionHandlingMiddleware
     {
-        _next = next;
-        _logger = logger;
-    }
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-    public async Task InvokeAsync(HttpContext context)
-    {
-        try
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
         {
-            // Let the next middleware or controller run
-            await _next(context);
-        }
-        catch (Exception ex)
-        {
-            // Log error internally
-            _logger.LogError(ex, "Unhandled exception occurred");
-
-            // Handle the exception and return a response
-            await HandleExceptionAsync(context, ex);
-        }
-    }
-
-    private static Task HandleExceptionAsync(HttpContext context, Exception ex)
-    {
-        // Get trace identifier for logging/debugging
-        var traceId = context.TraceIdentifier;
-
-        // Default response: unexpected error
-        var response = new ErrorResponse
-        {
-            Message = "An unexpected error occurred",
-            Category = "UnexpectedError",
-            TraceId = traceId
-        };
-
-        var status = HttpStatusCode.InternalServerError;
-
-        // Map specific domain exceptions to status codes
-        switch (ex)
-        {
-            case BookingConflictException:
-                status = HttpStatusCode.UnprocessableEntity; // 422
-                response.Message = ex.Message;
-                response.Category = "BusinessRuleViolation";
-                break;
-
-            case InvalidBookingTimeException:
-                status = HttpStatusCode.BadRequest; // 400
-                response.Message = ex.Message;
-                response.Category = "ValidationError";
-                break;
-
-            case ArgumentException:
-                status = HttpStatusCode.BadRequest; // 400
-                response.Message = ex.Message;
-                response.Category = "ValidationError";
-                break;
+            _next = next;
+            _logger = logger;
         }
 
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)status;
+        public async Task InvokeAsync(HttpContext context)
+        {
+            try
+            {
+                // Call the next middleware in the pipeline
+                await _next(context);
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception centrally
+                await HandleExceptionAsync(context, ex, _logger);
+            }
+        }
 
-        var json = JsonSerializer.Serialize(response);
+        private static async Task HandleExceptionAsync(HttpContext context, Exception exception, ILogger logger)
+        {
+            context.Response.ContentType = "application/json";
 
-        return context.Response.WriteAsync(json);
+            HttpStatusCode status;
+            string category;
+            string? details = null;
+
+            switch (exception)
+            {
+                // Client input issues → validation errors
+                case ArgumentException:
+                    status = HttpStatusCode.BadRequest;
+                    category = "ValidationError";
+                    details = exception.Message;
+                    break;
+
+                // Domain failures → business rules
+                case InvalidOperationException:
+                case BookingConflictException:  // custom domain exception
+                    status = HttpStatusCode.UnprocessableEntity;
+                    category = "BusinessRuleViolation";
+                    details = exception.Message;
+                    break;
+
+                // File, DB, network → infrastructure
+                case System.IO.IOException:
+                    status = HttpStatusCode.InternalServerError;
+                    category = "InfrastructureFailure";
+                    details = "An infrastructure error occurred. Please try again later.";
+                    break;
+
+                // All other unexpected errors
+                default:
+                    status = HttpStatusCode.InternalServerError;
+                    category = "UnexpectedError";
+                    details = "An unexpected error occurred. Please contact support.";
+                    break;
+            }
+
+            // Log error with category and details, but avoid sensitive info
+            logger.LogError(exception, "[{Category}] {Message}", category, exception.Message);
+
+            var response = new ErrorResponse
+            {
+                Message = details ?? "An error occurred.",
+                Category = category,
+                Timestamp = DateTime.UtcNow
+            };
+
+            context.Response.StatusCode = (int)status;
+
+            var json = JsonSerializer.Serialize(response);
+            await context.Response.WriteAsync(json);
+        }
     }
 }

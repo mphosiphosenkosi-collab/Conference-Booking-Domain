@@ -20,6 +20,7 @@ namespace API.Controllers
         public IActionResult GetAllRooms()
         {
             var rooms = _bookingManager.GetAllRooms();
+
             var dtos = rooms.Select(r => new ConferenceRoomDto
             {
                 Id = r.Id,
@@ -37,7 +38,7 @@ namespace API.Controllers
         {
             var room = _bookingManager.GetAllRooms().FirstOrDefault(r => r.Id == id);
             if (room == null)
-                return NotFound(new { Error = $"Room with ID {id} not found" });
+                throw new InvalidOperationException($"Room with ID {id} not found");
 
             var dto = new ConferenceRoomDto
             {
@@ -55,7 +56,7 @@ namespace API.Controllers
         public IActionResult CreateRoom([FromBody] CreateRoomDto request)
         {
             if (!Enum.TryParse<ConferenceRoomBooking.Domain.RoomType>(request.Type, true, out var roomType))
-                return BadRequest(new { Error = $"Invalid room type: {request.Type}" });
+                throw new ArgumentException($"Invalid room type: {request.Type}");
 
             var room = new ConferenceRoom(
                 GenerateRoomId(),

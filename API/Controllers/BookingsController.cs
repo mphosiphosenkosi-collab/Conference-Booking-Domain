@@ -20,6 +20,7 @@ namespace API.Controllers
         public IActionResult GetAllBookings()
         {
             var bookings = _bookingManager.GetAllBookings();
+
             var dtos = bookings.Select(b => new BookingDto
             {
                 Id = b.Id,
@@ -38,7 +39,7 @@ namespace API.Controllers
         {
             var booking = _bookingManager.GetAllBookings().FirstOrDefault(b => b.Id == id);
             if (booking == null)
-                return NotFound(new { Error = $"Booking with ID {id} not found" });
+                throw new InvalidOperationException($"Booking with ID {id} not found");
 
             var dto = new BookingDto
             {
@@ -83,7 +84,7 @@ namespace API.Controllers
         {
             var booking = _bookingManager.GetAllBookings().FirstOrDefault(b => b.Id == id);
             if (booking == null)
-                return NotFound(new { Error = $"Booking with ID {id} not found" });
+                throw new InvalidOperationException($"Booking with ID {id} not found");
 
             switch (request.Action.ToLower())
             {
@@ -97,7 +98,7 @@ namespace API.Controllers
                     booking.Complete();
                     break;
                 default:
-                    return BadRequest(new { Error = $"Invalid action: {request.Action}" });
+                    throw new ArgumentException($"Invalid action: {request.Action}");
             }
 
             var dto = new BookingDto
