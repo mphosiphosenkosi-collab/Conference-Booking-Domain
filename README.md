@@ -1,302 +1,100 @@
-📖 Conference Room Booking System - Professional README
-📋 Table of Contents
-Project Overview
+# Conference Booking System API
 
-Architecture & Design
+## Overview
 
-Project Structure
+This is an ASP.NET Core Web API for managing conference room bookings.  
+It is designed to demonstrate professional API architecture, separation of concerns, and API contract validation.
 
-Getting Started
+The project covers Assignments 2.1 through 2.2 and is prepared for Assignment 2.3.
 
-API Reference
+---
 
-Extra Credit Implementation
+## Project Structure
 
-Testing & Verification
+Conference-Booking-Domain/
+├── API/ # ASP.NET Core Web API
+│ ├── Controllers/ # API endpoints
+│ │ ├── BookingsController.cs
+│ │ ├── ConferenceRoomsController.cs
+│ │ ├── FileOperationsController.cs
+│ │ └── HealthController.cs
+│ ├── Models/ # API DTOs
+│ │ ├── BookingDto.cs
+│ │ ├── CreateBookingDto.cs
+│ │ ├── UpdateBookingStatusDto.cs
+│ │ ├── ConferenceRoomDto.cs
+│ │ └── CreateRoomDto.cs
+│ ├── Program.cs
+│ └── API.csproj
+├── ConferenceRoomBooking.Domain/ # Core domain models and enums
+├── ConferenceRoomBooking.Logic/ # Business logic (BookingManager)
+└── ConferenceRoomBooking.sln
 
-Development Guidelines
+---
 
-Interview Preparation
+## Branching Strategy
 
-License
+- **Assignment2.1**: Initial API setup, basic controllers, BookingManager integration  
+- **Assignment2.2**: Strengthened API contract  
+  - DTO validation at API boundary  
+  - Proper HTTP status codes (200, 400, 422, 500)  
+  - Thin controllers (no domain logic in controllers)  
+  - Domain failures mapped to HTTP responses  
+- **Assignment2.3**: Ready for the next assignment (TBD)
 
-🏗️ Project Overview
-Conference Room Booking System
-*A Professional .NET 8 Domain-Driven Design Project*
+---
 
-A production-ready conference room booking system built using modern .NET 8 architecture principles. Following industry-standard Domain-Driven Design (DDD) patterns, this project demonstrates how to structure enterprise applications with clear separation of concerns, testable components, and maintainable code.
+## Features Implemented (So Far)
 
-Key Features:
+### Booking Operations
 
-✅ Clean layered architecture (DDD-inspired)
+- Get all bookings (`GET /api/bookings`)  
+- Get booking by ID (`GET /api/bookings/{id}`)  
+- Create a booking (`POST /api/bookings`)  
+- Update booking status (`PUT /api/bookings/{id}/status`)
 
-✅ Repository pattern implementation
+### Conference Room Operations
 
-✅ Dependency injection throughout
+- Get all conference rooms (`GET /api/conferencerooms`)  
+- Create a new room (`POST /api/conferencerooms`)  
 
-✅ JSON file-based persistence
+### Validation & Safety
 
-✅ Swagger API documentation
+- All endpoints use **DTOs**, not domain models  
+- Input validation with `[Required]`, `[EmailAddress]`, `[Range]`  
+- Invalid requests return `400 Bad Request`  
+- Domain rule violations return `422 Unprocessable Entity`  
+- Unexpected errors return `500 Internal Server Error`  
+- Controllers remain thin — only map DTOs and call BookingManager
 
-✅ Booking management (create, read, cancel)
+### Additional Endpoints
 
-✅ Overlap detection and prevention
+- Health check endpoint (`GET /api/health`)  
+- File operations (`FileOperationsController`) — for CSV/JSON import/export
 
-✅ Room availability checking
+---
 
-✅ Status tracking (Pending, Confirmed, Cancelled)
+## Tools & Libraries
 
-🏛️ Architecture & Design
-Layered Architecture
-text
-ConferenceRoomBooking/
-├── 📦 Domain/          # Pure domain models
-│   ├── Entities/       # Booking.cs, ConferenceRoom.cs
-│   ├── Enums/          # BookingStatus.cs
-│   ├── DTOs/           # BookingRequest.cs, BookingResult.cs
-│   └── Exceptions/     # Domain-specific exceptions
-├── ⚙️ Logic/           # Business logic
-│   ├── Services/       # BookingService.cs
-│   ├── Interfaces/     # IBookingService.cs
-│   └── Validators/     # Business rule validation
-├── 💾 Persistence/     # Data access
-│   ├── Repositories/   # IBookingRepository.cs, BookingRepository.cs
-│   ├── Stores/         # JsonDataStore.cs
-│   └── Data/           # bookings_data.json
-├── 🌐 API/             # Web interface
-│   ├── Controllers/    # BookingsController.cs, HealthController.cs
-│   └── Program.cs      # DI configuration
-└── 💻 ConsoleApp/      # Console client application
-Dependency Flow
-Domain ← No dependencies (pure models)
-
-Logic ← Domain (business logic only)
-
-Persistence ← Domain + Logic interfaces
-
-API ← Domain + Logic + Persistence
-
-ConsoleApp ← Logic
-
-Key Design Principles
-Principle	Implementation	Benefit
-Separation of Concerns	Each layer has single responsibility	Prevents tangled code, easier maintenance
-Testability	Independent layer testing with mocking	Comprehensive automated testing
-Dependency Inversion	Interfaces define contracts	Swap implementations without changing business logic
-Immutability	Read-only properties in domain entities	Thread safety, predictable state
-📁 Project Structure
-Project	Purpose	Key Components
-ConferenceRoomBooking.Domain	Core business models	Booking, ConferenceRoom, DTOs, exceptions
-ConferenceRoomBooking.Logic	Business rules	BookingService, interfaces, validation
-ConferenceRoomBooking.Persistence	Data storage	BookingRepository, JsonDataStore
-ConferenceRoomBooking.WebApi	HTTP/REST API	Controllers, Swagger, health endpoints
-ConferenceRoomBooking.ConsoleApp	CLI interface	Console-based booking operations
-🚀 Getting Started
-Prerequisites
-.NET 8 SDK
-
-Git
-
-Visual Studio 2022, VS Code, or Rider
-
-Installation
-bash
-# Clone repository
-git clone <repository-url>
-cd ConferenceRoomBooking
-
-# Restore dependencies
-dotnet restore
-
-# Build solution
-dotnet build
-
-# Run Web API
-dotnet run --project src/ConferenceRoomBooking.WebApi
-Access Points
-Swagger UI: https://localhost:5001/swagger
-
-Health Check: https://localhost:5001/api/health
-
-API Base: https://localhost:5001/api/bookings
-
-🔌 API Reference
-Core Endpoints
-Method	Endpoint	Description	Status Codes
-POST	/api/bookings	Create new booking	201, 400
-GET	/api/bookings	Get all bookings	200
-GET	/api/bookings/{id}	Get booking by ID	200, 404
-DELETE	/api/bookings/{id}	Cancel booking	200, 404
-GET	/api/bookings/check-availability	Check room availability	200
-Extra Credit Endpoints
-Method	Endpoint	Description	Status Codes
-GET	/api/health	API health status	200
-GET	/api/bookings/{id}	Single resource with 404	200, 404
-Example Requests
-bash
-# Health check
-curl -X GET "https://localhost:5001/api/health"
-
-# Create booking
-curl -X POST "https://localhost:5001/api/bookings" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "employeeId": "EMP001",
-    "roomName": "Boardroom A",
-    "startTime": "2024-12-25T09:00:00Z",
-    "endTime": "2024-12-25T10:00:00Z"
-  }'
-
-# Get booking by ID
-curl -X GET "https://localhost:5001/api/bookings/1"
-
-# Get non-existent booking (returns 404)
-curl -X GET "https://localhost:5001/api/bookings/999999"
-🎯 Extra Credit Implementation
-✅ Completed Requirements
-Requirement	Status	Implementation
-GET /api/bookings/{id}	✅ Done	Route parameter, returns 404 if not found
-No exceptions for control flow	✅ Done	Uses NotFound() instead of throwing
-GET /api/health endpoint	✅ Done	Returns service status and UTC time
-RESTful thinking	✅ Done	Proper HTTP verbs and status codes
-Status code discipline	✅ Done	200, 201, 400, 404 as appropriate
-API maturity	✅ Done	Health endpoint for observability
-Separation of concerns	✅ Done	Thin controllers, logic in services
-Real-world readiness	✅ Done	Error handling, health checks, docs
-Minimal API README section	✅ Done	Running instructions and examples
-Health Endpoint Implementation
-csharp
-// In Program.cs or HealthController.cs
-app.MapGet("/api/health", () => new
-{
-    service = "Conference Room Booking API",
-    status = "Running",
-    utcTime = DateTime.UtcNow
-});
-Response:
-
-json
-{
-    "service": "Conference Room Booking API",
-    "status": "Running",
-    "utcTime": "2024-12-25T10:00:00Z"
-}
-404 Handling Implementation
-csharp
-[HttpGet("{id}")]
-public async Task<ActionResult<BookingResponse>> GetBooking(int id)
-{
-    var booking = await _bookingService.GetBookingByIdAsync(id);
-    
-    if (booking == null)
-    {
-        return NotFound(); // Proper 404, no exceptions thrown
-    }
-    
-    return Ok(booking);
-}
-🧪 Testing & Verification
-Running Tests
-bash
-# Run all tests
-dotnet test
-
-# Run specific test project
-dotnet test src/ConferenceRoomBooking.Logic.Tests
-Verification Scripts
-bash
-# Check project structure
-./final_structure_check.sh
-
-# Test API behavior
-./demonstrate_api_behavior.sh
-
-# Verify dependencies (no circular references)
-dotnet list src/ConferenceRoomBooking.Logic reference
-Manual Testing with cURL
-bash
-# Test health endpoint
-curl -X GET "https://localhost:5001/api/health" -k
-
-# Test 404 response
-curl -X GET "https://localhost:5001/api/bookings/999999" -k -v
-# Should return: HTTP/1.1 404 Not Found
-👨‍💻 Development Guidelines
-Build Commands
-bash
-# Build all projects
-dotnet build
-
-# Run Web API
-dotnet run --project src/ConferenceRoomBooking.WebApi
-
-# Run Console App
-dotnet run --project src/ConferenceRoomBooking.ConsoleApp
-
-# Clean solution
-dotnet clean
-Adding New Features
-Add Domain Model → Create entity in Domain/Entities/
-
-Add Business Logic → Create service in Logic/Services/
-
-Add Data Access → Implement repository in Persistence/Repositories/
-
-Add API Endpoint → Create controller in API/Controllers/
-
-Add Tests → Create test project or add to existing
-
-Dependency Injection Registration
-csharp
-// In Program.cs
-builder.Services.AddLogicServices();      // From Logic layer
-builder.Services.AddPersistenceServices(); // From Persistence layer
-
-// Service lifetimes:
-// - Singleton: JsonDataStore (file access coordination)
-// - Scoped: BookingRepository, BookingService (per-request isolation)
-// - Transient: Lightweight, stateless services
-💼 Interview Preparation
-Common Questions & Answers
-Q: Why use layered architecture?
-A: Maintainability (changes in one layer don't cascade), testability (independent testing), scalability (replace layers without rewriting logic), and clear responsibility separation.
-
-Q: How do you prevent circular dependencies?
-A: Strict dependency rules: Domain (no deps), Logic (depends on Domain only), Persistence (depends on Domain + Logic interfaces), WebApi (depends on all). Interfaces are defined where they're used.
-
-Q: DTOs vs Domain Entities?
-A: DTOs are for API communication (public setters, input validation). Domain Entities are for business logic (immutable, enforce rules, have behavior). Separation prevents overposting attacks.
-
-Q: How to add a database?
-A: 1. Create SqlBookingRepository : IBookingRepository. 2. Update DI to use EF Core. 3. Add migrations. No changes needed in Domain, Logic, or WebApi layers.
-
-Q: Why async/await everywhere?
-A: Scalability (non-blocking I/O), consistency (uniform pattern), performance (better resource utilization), and future-proofing for truly async databases.
-
-📊 Architecture Benefits Summary
-Benefit	How Achieved	Impact
-Maintainability	Clear layer separation	Changes isolated, reduced regression risk
-Testability	Dependency injection, interfaces	Comprehensive automated testing
-Scalability	Async patterns, swappable layers	Easy to add features or scale infrastructure
-Professionalism	Industry-standard patterns	Production-ready, interview-ready code
-Learning Value	DDD implementation	Understands enterprise architecture patterns
-📄 License
-MIT License - See LICENSE file for details.
-
-🤝 Contributing
-Fork the repository
-
-Create a feature branch (git checkout -b feature/AmazingFeature)
-
-Commit changes (git commit -m 'Add AmazingFeature')
-
-Push to branch (git push origin feature/AmazingFeature)
-
-Open a Pull Request
-
-📞 Support & Contact
-Issues: GitHub Issues
-
-Documentation: This README and Swagger UI
-
-Learning Path: Follow the layered architecture pattern for extensions
+- .NET 8.0  
+- ASP.NET Core Web API  
+- Swashbuckle (Swagger) for API documentation  
+- Microsoft.AspNetCore.OpenApi  
+- Visual Studio / VS Code  
+
+---
+
+## Next Steps (Assignment 2.3)
+
+- Implement extended API functionality  
+- Additional domain rules and validation  
+- Further API refinement and tests  
+- Keep branching strategy consistent for each assignment
+
+---
+
+## How to Run
+
+1. Clone repository:  
+
+```bash
