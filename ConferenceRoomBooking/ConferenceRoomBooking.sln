@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8E405650-5CB2-4093-A7CE-E73471AD0AE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.ConsoleApp", "src\ConferenceRoomBooking.ConsoleApp\ConferenceRoomBooking.ConsoleApp.csproj", "{72FD49BE-B7B6-41AC-B0A3-C57C4838E557}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.Domain", "src\ConferenceRoomBooking.Domain\ConferenceRoomBooking.Domain.csproj", "{F8154559-24A7-4845-B1E3-9C11F6BABE8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.Logic", "src\ConferenceRoomBooking.Logic\ConferenceRoomBooking.Logic.csproj", "{64EFE5AC-154C-4023-84F4-914241F64B96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.Persistence", "src\ConferenceRoomBooking.Persistence\ConferenceRoomBooking.Persistence.csproj", "{6FC0EA93-DDEE-4712-9362-4C57ACA1C05E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.WebApi", "src\ConferenceRoomBooking.WebApi\ConferenceRoomBooking.WebApi.csproj", "{CA95574B-1CC5-46A4-8D6C-7CDA6FABF39E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72FD49BE-B7B6-41AC-B0A3-C57C4838E557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72FD49BE-B7B6-41AC-B0A3-C57C4838E557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72FD49BE-B7B6-41AC-B0A3-C57C4838E557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72FD49BE-B7B6-41AC-B0A3-C57C4838E557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8154559-24A7-4845-B1E3-9C11F6BABE8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8154559-24A7-4845-B1E3-9C11F6BABE8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8154559-24A7-4845-B1E3-9C11F6BABE8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8154559-24A7-4845-B1E3-9C11F6BABE8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64EFE5AC-154C-4023-84F4-914241F64B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64EFE5AC-154C-4023-84F4-914241F64B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64EFE5AC-154C-4023-84F4-914241F64B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64EFE5AC-154C-4023-84F4-914241F64B96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FC0EA93-DDEE-4712-9362-4C57ACA1C05E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FC0EA93-DDEE-4712-9362-4C57ACA1C05E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FC0EA93-DDEE-4712-9362-4C57ACA1C05E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FC0EA93-DDEE-4712-9362-4C57ACA1C05E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA95574B-1CC5-46A4-8D6C-7CDA6FABF39E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA95574B-1CC5-46A4-8D6C-7CDA6FABF39E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA95574B-1CC5-46A4-8D6C-7CDA6FABF39E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA95574B-1CC5-46A4-8D6C-7CDA6FABF39E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{72FD49BE-B7B6-41AC-B0A3-C57C4838E557} = {8E405650-5CB2-4093-A7CE-E73471AD0AE9}
+		{F8154559-24A7-4845-B1E3-9C11F6BABE8A} = {8E405650-5CB2-4093-A7CE-E73471AD0AE9}
+		{64EFE5AC-154C-4023-84F4-914241F64B96} = {8E405650-5CB2-4093-A7CE-E73471AD0AE9}
+		{6FC0EA93-DDEE-4712-9362-4C57ACA1C05E} = {8E405650-5CB2-4093-A7CE-E73471AD0AE9}
+		{CA95574B-1CC5-46A4-8D6C-7CDA6FABF39E} = {8E405650-5CB2-4093-A7CE-E73471AD0AE9}
+	EndGlobalSection
+EndGlobal
