@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ConferenceRoomBooking.Domain\ConferenceRoomBooking.Domain.csproj" />
+    <ProjectReference Include="..\ConferenceRoomBooking\ConferenceRoomBooking.Domain\ConferenceRoomBooking.Domain.csproj" />
+    <ProjectReference Include="..\ConferenceRoomBooking.Domain\ConferenceRoomBooking.Domain.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
