@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ConferenceRoomBooking", "ConferenceRoomBooking", "{94B59A8A-2332-4272-B884-F2134422FF2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.ConsoleApp", "ConferenceRoomBooking\ConferenceRoomBooking.ConsoleApp\ConferenceRoomBooking.ConsoleApp.csproj", "{0E33F961-D781-4D3F-831E-E8CE72F2BC14}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.Domain", "ConferenceRoomBooking\ConferenceRoomBooking.Domain\ConferenceRoomBooking.Domain.csproj", "{28E4554A-4913-45B5-ADEE-C571111380D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConferenceRoomBooking.Logic", "ConferenceRoomBooking\ConferenceRoomBooking.Logic\ConferenceRoomBooking.Logic.csproj", "{EA26A794-7B4A-43E7-A5E7-734789953410}"
@@ -20,10 +18,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0E33F961-D781-4D3F-831E-E8CE72F2BC14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E33F961-D781-4D3F-831E-E8CE72F2BC14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E33F961-D781-4D3F-831E-E8CE72F2BC14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E33F961-D781-4D3F-831E-E8CE72F2BC14}.Release|Any CPU.Build.0 = Release|Any CPU
 		{28E4554A-4913-45B5-ADEE-C571111380D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{28E4554A-4913-45B5-ADEE-C571111380D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28E4554A-4913-45B5-ADEE-C571111380D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -34,7 +28,6 @@ Global
 		{EA26A794-7B4A-43E7-A5E7-734789953410}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{0E33F961-D781-4D3F-831E-E8CE72F2BC14} = {94B59A8A-2332-4272-B884-F2134422FF2E}
 		{28E4554A-4913-45B5-ADEE-C571111380D7} = {94B59A8A-2332-4272-B884-F2134422FF2E}
 		{EA26A794-7B4A-43E7-A5E7-734789953410} = {94B59A8A-2332-4272-B884-F2134422FF2E}
 	EndGlobalSection
