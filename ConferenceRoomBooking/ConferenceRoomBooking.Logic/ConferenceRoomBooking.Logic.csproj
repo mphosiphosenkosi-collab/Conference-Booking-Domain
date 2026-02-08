@@ -1,20 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <ItemGroup>
-    <ProjectReference Include="..\ConferenceRoomBooking.Domain\ConferenceRoomBooking.Domain.csproj" />
-<<<<<<<< HEAD:ConferenceRoomBooking/ConferenceRoomBooking.Logic/ConferenceRoomBooking.Logic.csproj
-========
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
->>>>>>>> 8e65c2ba8151571289af7c8e6e96bd70a2114f78:ConferenceRoomBooking/src/ConferenceRoomBooking.Logic/ConferenceRoomBooking.Logic.csproj
-  </ItemGroup>
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\ConferenceRoomBooking.Domain\ConferenceRoomBooking.Domain.csproj" />
+  </ItemGroup>
 </Project>
