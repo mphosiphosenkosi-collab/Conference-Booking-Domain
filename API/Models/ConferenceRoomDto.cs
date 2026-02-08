@@ -1,19 +1,9 @@
-namespace API.Models
-{
-    public class ConferenceRoomDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public int Capacity { get; set; }
-        public List<string> Features { get; set; } = new();
-    }
+namespace API.Models;
 
-    public class CreateRoomDto
-    {
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public int Capacity { get; set; }
-        public List<string> Features { get; set; } = new();
-    }
+public class CreateRoomDto
+{
+    public string Name { get; set; } = string.Empty;
+    public int Capacity { get; set; }
+    public string Type { get; set; } = string.Empty;
+    public string? Features { get; set; }
 }

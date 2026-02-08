@@ -1,15 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace API.Models;
 
 public class CreateRoomDto
 {
-    [Required]
-    public string Name { get; set; } = "";
-
-    [Required]
+    public string Name { get; set; } = string.Empty;
+    public string Type { get; set; } = string.Empty;
     public int Capacity { get; set; }
-
-    [Required]
-    public string RoomType { get; set; } = "";
+    public List<string> Features { get; set; } = new();
 }
