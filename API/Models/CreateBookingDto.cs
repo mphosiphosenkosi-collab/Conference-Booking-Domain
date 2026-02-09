@@ -1,19 +1,16 @@
-using System.ComponentModel.DataAnnotations;
+// ...existing code...
+using System;
+using System.Text.Json.Serialization;
 
-namespace API.Models;
-
-public class CreateBookingDto
+namespace API.Models
 {
-    [Required]
-    public int RoomId { get; set; }
+    public class CreateBookingDto
+    {
+        [JsonPropertyName("roomId")]
+        public int RoomId { get; set; }         // ID of the room to book
 
-    [Required]
-    [EmailAddress]
-    public string UserEmail { get; set; } = "";
-
-    [Required]
-    public DateTime StartTime { get; set; }
-
-    [Required]
-    public DateTime EndTime { get; set; }
+        public required string UserEmail { get; set; }   // User booking the room
+        public DateTime StartTime { get; set; } // Booking start
+        public DateTime EndTime { get; set; }   // Booking end
+    }
 }

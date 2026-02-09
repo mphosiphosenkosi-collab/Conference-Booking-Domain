@@ -1,97 +1,120 @@
-﻿// File: BookingManager.cs
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ConferenceRoomBooking.Domain;
-using System.Text.Json;
-using System.IO;
+﻿using ConferenceRoomBooking.Domain;
+using ConferenceRoomBooking.Domain.Persistence;
 
 namespace ConferenceRoomBooking.Logic
 {
+    /// <summary>
+    /// BOOKING MANAGER = BUSINESS RULES LAYER
+    /// This class decides WHAT is allowed.
+    /// It does NOT know how data is stored.
+    /// </summary>
     public class BookingManager
     {
         private readonly List<ConferenceRoom> _rooms = new();
         private readonly List<Booking> _bookings = new();
 
+        // 🔗 persistence injected — not hardcoded
+        private readonly IBookingStore _store;
+
+        public BookingManager(IBookingStore store)
+        {
+            _store = store;
+        }
+
+        // ===============================
+        // ROOM METHODS
+        // ===============================
+
         public void AddRoom(ConferenceRoom room)
         {
-            if (room == null) throw new ArgumentNullException(nameof(room));
+            if (room == null)
+                throw new ArgumentNullException(nameof(room));
+
             if (_rooms.Any(r => r.Id == room.Id))
-                throw new ArgumentException($"Room with ID {room.Id} already exists.");
+                throw new ArgumentException("Room already exists");
 
             _rooms.Add(room);
         }
 
-        public Booking TryCreateBooking(int id, int roomId, string userEmail, DateTime start, DateTime end)
+        public IReadOnlyList<ConferenceRoom> GetRooms()
+            => _rooms.ToList();
+
+
+        // ===============================
+        // BOOKING METHODS
+        // ===============================
+
+        public IReadOnlyList<Booking> GetBookings()
+            => _bookings.ToList();
+
+
+        /// <summary>
+        /// Create booking with full validation
+        /// </summary>
+        public Booking CreateBooking(
+            int id,
+            int roomId,
+            string userEmail,
+            DateTime start,
+            DateTime end)
         {
-            if (!_rooms.Any()) throw new InvalidOperationException("No conference rooms available.");
+            // ✅ Validate time
+            if (start >= end)
+                throw new ArgumentException("Invalid time range");
 
+            // ✅ Room must exist
             var room = _rooms.FirstOrDefault(r => r.Id == roomId);
-            if (room == null) throw new ArgumentException($"Room ID {roomId} does not exist.");
+            if (room == null)
+                throw new ArgumentException("Room does not exist");
 
-            var overlap = _bookings.Any(b => b.RoomId == roomId &&
-                                             ((start < b.EndTime) && (end > b.StartTime)));
-            if (overlap) throw new BookingConflictException($"Booking conflicts with an existing booking in room {roomId}.");
+            // ✅ Check overlap (Emily logic — adapted)
+            bool overlaps = _bookings.Any(b =>
+                b.RoomId == roomId &&
+                start < b.EndTime &&
+                end > b.StartTime);
 
+            if (overlaps)
+                throw new BookingConflictException("Time slot already booked");
+
+            // ✅ Create booking
             var booking = new Booking(id, roomId, userEmail, start, end);
+
             _bookings.Add(booking);
+
             return booking;
         }
 
-        public IEnumerable<Booking> GetAllBookings() => _bookings.ToList();
-        public IEnumerable<ConferenceRoom> GetAllRooms() => _rooms.ToList();
 
-        public async Task SaveBookingsAsync(string filePath)
+        /// <summary>
+        /// Cancel booking by id
+        /// </summary>
+        public bool CancelBooking(int bookingId)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-                throw new ArgumentException("File path is required.", nameof(filePath));
+            var booking = _bookings.FirstOrDefault(b => b.Id == bookingId);
 
-            try
-            {
-                var json = JsonSerializer.Serialize(_bookings, new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                });
+            if (booking == null)
+                return false;
 
-                await File.WriteAllTextAsync(filePath, json);
-            }
-            catch (IOException ex)
-            {
-                throw new IOException("Failed to save bookings file.", ex);
-            }
+            _bookings.Remove(booking);
+            return true;
         }
 
 
-        public async Task LoadBookingsAsync(string filePath)
+        // ===============================
+        // PERSISTENCE METHODS
+        // ===============================
+
+        public async Task SaveAsync()
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-                throw new ArgumentException("File path cannot be empty.", nameof(filePath));
-
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException("Booking file not found.", filePath);
-
-            try
-            {
-                var json = await File.ReadAllTextAsync(filePath);
-
-                var loaded = JsonSerializer.Deserialize<List<Booking>>(json);
-
-                if (loaded == null)
-                    throw new InvalidDataException("Booking file contained no data.");
-
-                _bookings.Clear();
-                _bookings.AddRange(loaded);
-            }
-            catch (JsonException ex)
-            {
-                throw new InvalidDataException("Booking file format is invalid.", ex);
-            }
-            catch (IOException ex)
-            {
-                throw new IOException("Failed to load bookings from file.", ex);
-            }
+            await _store.SaveAsync(_bookings);
         }
 
+        public async Task LoadAsync()
+        {
+            var loaded = await _store.LoadAsync();
+
+            _bookings.Clear();
+            _bookings.AddRange(loaded);
+        }
     }
 }

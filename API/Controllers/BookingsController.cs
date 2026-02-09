@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using ConferenceRoomBooking.Domain;
 using ConferenceRoomBooking.Logic;
 using API.Models;
 
@@ -9,115 +8,49 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class BookingsController : ControllerBase
     {
-        private readonly BookingManager _bookingManager;
+        private readonly BookingManager _manager;
 
-        public BookingsController(BookingManager bookingManager)
+        public BookingsController(BookingManager manager)
         {
-            _bookingManager = bookingManager;
+            _manager = manager;
         }
 
+        // ✅ GET api/bookings
         [HttpGet]
-        public IActionResult GetAllBookings()
+        public IActionResult GetAll()
         {
-            var bookings = _bookingManager.GetAllBookings();
-
-            var dtos = bookings.Select(b => new BookingDto
-            {
-                Id = b.Id,
-                RoomId = b.RoomId,
-                UserEmail = b.UserEmail,
-                StartTime = b.StartTime,
-                EndTime = b.EndTime,
-                Status = b.Status.ToString()
-            });
-
-            return Ok(dtos);
+            return Ok(_manager.GetBookings());
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetBookingById(int id)
-        {
-            var booking = _bookingManager.GetAllBookings().FirstOrDefault(b => b.Id == id);
-            if (booking == null)
-                throw new InvalidOperationException($"Booking with ID {id} not found");
-
-            var dto = new BookingDto
-            {
-                Id = booking.Id,
-                RoomId = booking.RoomId,
-                UserEmail = booking.UserEmail,
-                StartTime = booking.StartTime,
-                EndTime = booking.EndTime,
-                Status = booking.Status.ToString()
-            };
-
-            return Ok(dto);
-        }
-
+        // ✅ POST api/bookings
         [HttpPost]
-        public IActionResult CreateBooking([FromBody] CreateBookingDto request)
+        public IActionResult Create(CreateBookingDto dto)
         {
-            var bookingId = GenerateBookingId();
-            var booking = _bookingManager.TryCreateBooking(
-                bookingId,
-                request.RoomId,
-                request.UserEmail,
-                request.StartTime,
-                request.EndTime
+            var newId = _manager.GetBookings().Any()
+                ? _manager.GetBookings().Max(b => b.Id) + 1
+                : 1;
+
+            var booking = _manager.CreateBooking(
+                id: newId,
+                roomId: dto.RoomId,
+                userEmail: dto.UserEmail,
+                startTime: dto.StartTime,
+                endTime: dto.EndTime
             );
 
-            var dto = new BookingDto
-            {
-                Id = booking.Id,
-                RoomId = booking.RoomId,
-                UserEmail = booking.UserEmail,
-                StartTime = booking.StartTime,
-                EndTime = booking.EndTime,
-                Status = booking.Status.ToString()
-            };
-
-            return CreatedAtAction(nameof(GetBookingById), new { id = booking.Id }, dto);
+            return Ok(booking);
         }
 
-        [HttpPut("{id}/status")]
-        public IActionResult UpdateBookingStatus(int id, [FromBody] UpdateBookingStatusDto request)
+        // ✅ DELETE api/bookings/5
+        [HttpDelete("{id}")]
+        public IActionResult Cancel(int id)
         {
-            var booking = _bookingManager.GetAllBookings().FirstOrDefault(b => b.Id == id);
-            if (booking == null)
-                throw new InvalidOperationException($"Booking with ID {id} not found");
+            var removed = _manager.CancelBooking(id);
 
-            switch (request.Action.ToLower())
-            {
-                case "confirm":
-                    booking.Confirm();
-                    break;
-                case "cancel":
-                    booking.Cancel();
-                    break;
-                case "complete":
-                    booking.Complete();
-                    break;
-                default:
-                    throw new ArgumentException($"Invalid action: {request.Action}");
-            }
+            if (!removed)
+                return NotFound();
 
-            var dto = new BookingDto
-            {
-                Id = booking.Id,
-                RoomId = booking.RoomId,
-                UserEmail = booking.UserEmail,
-                StartTime = booking.StartTime,
-                EndTime = booking.EndTime,
-                Status = booking.Status.ToString()
-            };
-
-            return Ok(dto);
-        }
-
-        private int GenerateBookingId()
-        {
-            var bookings = _bookingManager.GetAllBookings();
-            return bookings.Any() ? bookings.Max(b => b.Id) + 1 : 1;
+            return NoContent();
         }
     }
 }
