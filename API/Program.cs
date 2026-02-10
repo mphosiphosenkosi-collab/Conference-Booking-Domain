@@ -1,4 +1,5 @@
 using ConferenceRoomBooking.Logic;
+using ConferenceRoomBooking.Logic.Persistence;
 using Microsoft.OpenApi.Models; 
 using API.Middleware;
 using API.Data;
@@ -7,6 +8,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// create file store
+var bookingStore = new BookingFileStore("bookings.json");
+
+// register store
+builder.Services.AddSingleton<IBookingStore>(bookingStore);
+
+// register manager
+builder.Services.AddSingleton<BookingManager>();
+
 
 // Add services
 
@@ -28,12 +39,12 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
-
-// Register BookingManager
-builder.Services.AddSingleton<BookingManager>();
-
 var app = builder.Build();
+
+// load existing bookings from file
+var manager = app.Services.GetRequiredService<BookingManager>();
+await manager.InitializeAsync();
+
 
 // ✅ Use middleware AFTER app is built
 app.UseMiddleware<ExceptionHandlingMiddleware>();

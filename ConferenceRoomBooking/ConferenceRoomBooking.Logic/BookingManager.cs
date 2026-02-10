@@ -84,6 +84,19 @@ namespace ConferenceRoomBooking.Logic
             return booking;
         }
 
+        public async Task InitializeAsync()
+        {
+            var loaded = await _store.LoadAsync();
+            _bookings.Clear();
+            _bookings.AddRange(loaded);
+        }
+
+        private async Task PersistAsync()
+        {
+            await _store.SaveAsync(_bookings);
+        }
+
+
 
         /// <summary>
         /// Cancel booking by id
