@@ -21,7 +21,7 @@ namespace ConferenceRoomBooking.Logic
             _store = store;
         }
 
-        // ===============================
+        // ===============================-
         // ROOM METHODS
         // ===============================
 
