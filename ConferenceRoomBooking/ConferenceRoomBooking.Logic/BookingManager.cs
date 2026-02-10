@@ -1,5 +1,5 @@
 ﻿using ConferenceRoomBooking.Domain;
-using ConferenceRoomBooking.Domain.Persistence;
+using ConferenceRoomBooking.Logic.Persistence;
 
 namespace ConferenceRoomBooking.Logic
 {
@@ -106,7 +106,7 @@ namespace ConferenceRoomBooking.Logic
 
         public async Task SaveAsync()
         {
-            await _store.SaveAsync(_bookings);
+            await _store.SaveAsync(_bookings.ToList());
         }
 
         public async Task LoadAsync()
