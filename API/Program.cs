@@ -45,6 +45,7 @@ var app = builder.Build();
 var manager = app.Services.GetRequiredService<BookingManager>();
 await manager.InitializeAsync();
 
+await SeedRoomsAsync(manager, "rooms.json");
 
 // ✅ Use middleware AFTER app is built
 app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -63,5 +64,29 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+async Task SeedRoomsAsync(BookingManager manager, string filePath)
+{
+    if (!File.Exists(filePath))
+    {
+        Console.WriteLine($"Room seed file '{filePath}' not found.");
+        return;
+    }
+
+    var json = await File.ReadAllTextAsync(filePath);
+    var rooms = System.Text.Json.JsonSerializer.Deserialize<List<ConferenceRoomBooking.Domain.ConferenceRoom>>(json);
+
+    if (rooms != null)
+    {
+        foreach (var room in rooms)
+        {
+            if (!manager.GetRooms().Any(r => r.Id == room.Id))
+            {
+                manager.AddRoom(room); // You’ll need this method in BookingManager
+            }
+        }
+    }
+}
+
 
 app.Run();
