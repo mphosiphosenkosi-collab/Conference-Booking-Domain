@@ -28,6 +28,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
+
 // Register BookingManager
 builder.Services.AddSingleton<BookingManager>();
 

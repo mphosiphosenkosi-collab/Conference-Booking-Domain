@@ -9,17 +9,18 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class ConferenceRoomsController : ControllerBase
     {
-        private readonly BookingManager _bookingManager;
+        private readonly BookingManager _manager;
 
-        public ConferenceRoomsController(BookingManager bookingManager)
+        public ConferenceRoomsController(BookingManager manager)
         {
-            _bookingManager = bookingManager;
+            _manager = manager;
         }
 
+        // ✅ GET api/conferencerooms
         [HttpGet]
         public IActionResult GetAllRooms()
         {
-            var rooms = _bookingManager.GetAllRooms();
+            var rooms = _manager.GetRooms();
 
             var dtos = rooms.Select(r => new ConferenceRoomDto
             {
@@ -33,57 +34,51 @@ namespace API.Controllers
             return Ok(dtos);
         }
 
+        // ✅ GET api/conferencerooms/5
         [HttpGet("{id}")]
-        public IActionResult GetRoomById(int id)
+        public IActionResult GetRoom(int id)
         {
-            var room = _bookingManager.GetAllRooms().FirstOrDefault(r => r.Id == id);
-            if (room == null)
-                throw new InvalidOperationException($"Room with ID {id} not found");
+            var room = _manager.GetRooms()
+                .FirstOrDefault(r => r.Id == id);
 
-            var dto = new ConferenceRoomDto
+            if (room == null)
+                return NotFound();
+
+            return Ok(new ConferenceRoomDto
             {
                 Id = room.Id,
                 Name = room.Name,
                 Type = room.Type.ToString(),
                 Capacity = room.Capacity,
                 Features = room.Features
-            };
-
-            return Ok(dto);
+            });
         }
 
+        // ✅ POST api/conferencerooms
         [HttpPost]
-        public IActionResult CreateRoom([FromBody] CreateRoomDto request)
+        public IActionResult CreateRoom(CreateRoomDto dto)
         {
-            if (!Enum.TryParse<ConferenceRoomBooking.Domain.RoomType>(request.Type, true, out var roomType))
-                throw new ArgumentException($"Invalid room type: {request.Type}");
+            if (!Enum.TryParse<RoomType>(dto.Type, true, out var type))
+                return BadRequest("Invalid room type");
+
+            var newId = _manager.GetRooms().Any()
+                ? _manager.GetRooms().Max(r => r.Id) + 1
+                : 1;
 
             var room = new ConferenceRoom(
-                GenerateRoomId(),
-                request.Name,
-                roomType,
-                request.Capacity,
-                request.Features
+                newId,
+                dto.Name,
+                type,
+                dto.Capacity,
+                dto.Features
             );
 
-            _bookingManager.AddRoom(room);
+            _manager.AddRoom(room);
 
-            var dto = new ConferenceRoomDto
-            {
-                Id = room.Id,
-                Name = room.Name,
-                Type = room.Type.ToString(),
-                Capacity = room.Capacity,
-                Features = room.Features
-            };
-
-            return CreatedAtAction(nameof(GetRoomById), new { id = room.Id }, dto);
-        }
-
-        private int GenerateRoomId()
-        {
-            var rooms = _bookingManager.GetAllRooms();
-            return rooms.Any() ? rooms.Max(r => r.Id) + 1 : 1;
+            return CreatedAtAction(
+                nameof(GetRoom),
+                new { id = room.Id },
+                dto);
         }
     }
 }

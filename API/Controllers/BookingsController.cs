@@ -34,8 +34,10 @@ namespace API.Controllers
                 id: newId,
                 roomId: dto.RoomId,
                 userEmail: dto.UserEmail,
-                startTime: dto.StartTime,
-                endTime: dto.EndTime
+                start: dto.StartTime,
+                end: dto.EndTime
+                
+                
             );
 
             return Ok(booking);
