@@ -1,5 +1,5 @@
 // ConferenceRoomBooking.Domain/Enums/RoomType.cs
-namespace ConferenceRoomBooking.Domain.Enums
+namespace ConferenceRoomBooking.Domain
 {
     /// <summary>
     /// Types of conference rooms available
