@@ -1,4 +1,3 @@
-// File: Booking.cs
 using System;
 using ConferenceRoomBooking.Domain.Enums;
 
@@ -12,21 +11,10 @@ namespace ConferenceRoomBooking.Domain
         public DateTime StartTime { get; private set; }
         public DateTime EndTime { get; private set; }
         public BookingStatus Status { get; private set; }
-
-        public Booking(int id, int roomId, string userEmail, DateTime startTime, DateTime endTime)
-        {
-            if (id <= 0) throw new ArgumentException("Booking ID must be positive.", nameof(id));
-            if (string.IsNullOrWhiteSpace(userEmail)) throw new ArgumentException("User email cannot be empty.", nameof(userEmail));
-            if (roomId <= 0) throw new ArgumentException("Room ID must be positive.", nameof(roomId));
-            if (startTime >= endTime) throw new ArgumentException("Start time must be before end time.");
-
-            Id = id;
-            RoomId = roomId;
-            UserEmail = userEmail;
-            StartTime = startTime;
-            EndTime = endTime;
-            Status = BookingStatus.Pending;
-        }
+        
+        // NEW FOR ASSIGNMENT:
+        public DateTime CreatedAt { get; private set; }
+        public DateTime? CancelledAt { get; private set; }
 
         public void Confirm()
         {
@@ -39,7 +27,9 @@ namespace ConferenceRoomBooking.Domain
         {
             if (Status == BookingStatus.Completed)
                 throw new InvalidOperationException("Cannot cancel a completed booking.");
+            
             Status = BookingStatus.Cancelled;
+            CancelledAt = DateTime.UtcNow; // NEW: Record cancellation timestamp
         }
 
         public void Complete()

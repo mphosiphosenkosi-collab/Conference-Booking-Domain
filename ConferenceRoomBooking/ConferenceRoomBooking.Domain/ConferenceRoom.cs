@@ -3,27 +3,19 @@ using System.Collections.Generic;
 
 namespace ConferenceRoomBooking.Domain
 {
-    /// <summary>
-    /// Room types used by BookingManager and ConferenceRoom
-    /// </summary>
-    public enum RoomType
-    {
-        Small,      // 2-8 people
-        Medium,     // 9-20 people
-        Large,      // 21-50 people
-        Conference, // 51-200 people
-        Boardroom   // 8-15 people
-    }
-
     public class ConferenceRoom
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
-        public RoomType Type { get; private set; }
         public int Capacity { get; private set; }
         public List<string> Features { get; private set; }
+        
+        // NEW FOR ASSIGNMENT:
+        public string Location { get; private set; }
+        public bool IsActive { get; private set; }
 
-        public ConferenceRoom(int id, string name, RoomType type, int capacity, IEnumerable<string> features)
+        public ConferenceRoom(int id, string name, RoomType type, int capacity, 
+                             IEnumerable<string> features, string location = "Unknown")
         {
             if (id <= 0) throw new ArgumentException("Room ID must be positive.", nameof(id));
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Room name is required.", nameof(name));
@@ -31,9 +23,21 @@ namespace ConferenceRoomBooking.Domain
 
             Id = id;
             Name = name;
-            Type = type;
             Capacity = capacity;
             Features = new List<string>(features ?? Array.Empty<string>());
+            Location = location;
+            IsActive = true; // Default to active
         }
+
+        // New methods for assignment requirements
+        public void UpdateLocation(string newLocation)
+        {
+            if (string.IsNullOrWhiteSpace(newLocation))
+                throw new ArgumentException("Location cannot be empty.", nameof(newLocation));
+            Location = newLocation;
+        }
+
+        public void Deactivate() => IsActive = false;
+        public void Activate() => IsActive = true;
     }
 }
