@@ -1,5 +1,0 @@
-[
-  { "Id": 1, "Name": "Board Room", "Capacity": 10 },
-  { "Id": 2, "Name": "Main Hall", "Capacity": 50 },
-  { "Id": 3, "Name": "Small Meeting Room", "Capacity": 4 }
-]
