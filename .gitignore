@@ -1,8 +1,5 @@
 bin/
 obj/
+**/bin/
+**/obj/
 .vs/
-*.user
-*.suo
-*.cache
-*.log
-node_modules/
