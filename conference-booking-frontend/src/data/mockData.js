@@ -5,7 +5,7 @@ const mockBookings = [
     date: '2024-05-20',
     startTime: '10:00 AM',
     endTime: '12:00 PM',
-    userName: 'John Smith',
+    userName: 'Musa',
     status: 'confirmed'
   },
   {
@@ -14,7 +14,7 @@ const mockBookings = [
     date: '2024-05-20',
     startTime: '2:00 PM',
     endTime: '4:00 PM',
-    userName: 'Sarah Johnson',
+    userName: 'Siphosenkosi',
     status: 'pending'
   },
   {
@@ -23,7 +23,7 @@ const mockBookings = [
     date: '2024-05-21',
     startTime: '9:00 AM',
     endTime: '11:00 AM',
-    userName: 'Mike Wilson',
+    userName: 'Mike Mkhize',
     status: 'confirmed'
   },
   {
@@ -32,7 +32,7 @@ const mockBookings = [
     date: '2024-05-21',
     startTime: '1:00 PM',
     endTime: '3:00 PM',
-    userName: 'Emily Davis',
+    userName: 'Emily Clarkward',
     status: 'confirmed'
   },
   {
@@ -41,18 +41,9 @@ const mockBookings = [
     date: '2024-05-22',
     startTime: '3:00 PM',
     endTime: '5:00 PM',
-    userName: 'Tom Brown',
+    userName: 'Romio Brown',
     status: 'cancelled'
   },
-  {
-    id: 6,
-    roomName: 'Innovation Hub',
-    date: '2024-05-22',
-    startTime: '10:00 AM',
-    endTime: '12:00 PM',
-    userName: 'Lisa Chen',
-    status: 'pending'
-  }
 ];
 
 export default mockBookings;
