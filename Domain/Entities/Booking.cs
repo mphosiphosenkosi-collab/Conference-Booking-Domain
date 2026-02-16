@@ -19,7 +19,7 @@ namespace BookingSystem.Domain.Entities
     /// ├─────────────────┼─────────────────────────────┤
     /// │ Has behavior    │ Just data                    │
     /// │ Business rules  │ No logic                     │
-    │ │ Used by services│ Used by API responses        │
+    
     /// │ Knows about DB  │ Knows nothing about DB       │
     /// └─────────────────┴─────────────────────────────┘
     /// </summary>
