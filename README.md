@@ -391,12 +391,12 @@ Cascade Delete: Deleting a room deletes all its bookings
 
 🔐 Authentication
 Default Users (Seeded Automatically)
-Username	Password	Role	Permissions
-Siphosenkosi	siphosenkosi123	Admin	Full system access
-employee1	Employee123!	Employee	Create/cancel own bookings
-employee2	Employee123!	Employee	Create/cancel own bookings
-reception1	Reception123!	Receptionist	Book for visitors, view all
-facilities1	Facilities123!	Facilities Manager	Manage rooms
+Username Password Role Permissions
+Siphosenkosi siphosenkosi123 Admin Full system access
+employee1 Employee123! Employee Create/cancel own bookings
+employee2 Employee123! Employee Create/cancel own bookings
+reception1 Reception123! Receptionist Book for visitors, view all
+facilities1 Facilities123! Facilities Manager Manage rooms
 Login Endpoint
 Request:
 
@@ -426,37 +426,37 @@ Development: https://localhost:5001
 Production:  http://localhost:5000
 Swagger UI:  https://localhost:5001/swagger
 Authentication Endpoints
-Method	Endpoint	Description	Access
-POST	/api/auth/login	Authenticate user	Public
+Method Endpoint Description Access
+POST /api/auth/login Authenticate user Public
 Room Endpoints
-Method	Endpoint	Description	Access
-GET	/api/rooms	Get all rooms (paginated)	Authenticated
-GET	/api/rooms/{id}	Get room by ID	Authenticated
-POST	/api/rooms	Create new room	Facilities Manager
-PATCH	/api/rooms	Soft delete room	Facilities Manager, Admin
-POST	/api/rooms/{id}/reactivate	Reactivate room	Facilities Manager, Admin
+Method Endpoint Description Access
+GET /api/rooms Get all rooms (paginated) Authenticated
+GET /api/rooms/{id} Get room by ID Authenticated
+POST /api/rooms Create new room Facilities Manager
+PATCH /api/rooms Soft delete room Facilities Manager, Admin
+POST /api/rooms/{id}/reactivate Reactivate room Facilities Manager, Admin
 Booking Endpoints
-Method	Endpoint	Description	Access
-GET	/api/bookings	Get filtered bookings	Authenticated
-GET	/api/bookings/all	Get all bookings	Admin only
-POST	/api/bookings	Create booking	Employee, Receptionist
-DELETE	/api/bookings	Cancel booking	Employee (own), Receptionist
+Method Endpoint Description Access
+GET /api/bookings Get filtered bookings Authenticated
+GET /api/bookings/all Get all bookings Admin only
+POST /api/bookings Create booking Employee, Receptionist
+DELETE /api/bookings Cancel booking Employee (own), Receptionist
 Admin Endpoints
-Method	Endpoint	Description	Access
-GET	/api/admin/bookings/conflicts	Get conflicting bookings	Admin
-POST	/api/admin/bookings/resolve-conflict	Resolve conflict	Admin
+Method Endpoint Description Access
+GET /api/admin/bookings/conflicts Get conflicting bookings Admin
+POST /api/admin/bookings/resolve-conflict Resolve conflict Admin
 Query Parameters (Assignment 3.3)
 text
 GET /api/bookings?page=2&pageSize=10&roomId=5&location=Floor%201&fromDate=2026-03-01&toDate=2026-03-31&sortBy=date
-Parameter	Type	Description	Default
-page	int	Page number	1
-pageSize	int	Items per page	10
-roomId	int	Filter by room ID	null
-location	string	Filter by location	null
-fromDate	datetime	Filter by start date	null
-toDate	datetime	Filter by end date	null
-sortBy	string	Sort field (date/room/created)	"date"
-sortOrder	string	Sort order (asc/desc)	"asc"
+Parameter Type Description Default
+page int Page number 1
+pageSize int Items per page 10
+roomId int Filter by room ID null
+location string Filter by location null
+fromDate datetime Filter by start date null
+toDate datetime Filter by end date null
+sortBy string Sort field (date/room/created) "date"
+sortOrder string Sort order (asc/desc) "asc"
 ⚙️ Setup Instructions
 Prerequisites
 .NET 8 SDK
@@ -612,6 +612,60 @@ Content-Type: application/json
     "resolution": "approve",
     "notes": "VIP client request"
 }
+### 📌 Assignment 1.1 - Frontend: Component Architecture & Static UI
+
+| Requirement | Implementation | Status |
+|-------------|---------------|--------|
+| **Project Initialization** | Vite + React, boilerplate removed | ✅ Complete |
+| **Component Decomposition** | Navbar, Footer, BookingCard, Button components | ✅ Complete |
+| **Props & Reusability** | All data passed via props, no hardcoded text | ✅ Complete |
+| **List Rendering** | mockData.js with 6 bookings, .map(), unique keys | ✅ Complete |
+| **Styling & Layout** | Responsive CSS Grid, professional design | ✅ Complete |
+
+#### 🧩 Components Created
+📁 conference-booking-frontend/
+├── src/
+│ ├── components/
+│ │ ├── layout/
+│ │ │ ├── Navbar.jsx # App header with navigation
+│ │ │ └── Footer.jsx # Copyright with dynamic year
+│ │ ├── features/
+│ │ │ └── BookingCard.jsx # Individual booking display
+│ │ └── ui/
+│ │ └── Button.jsx # Reusable button (primary/secondary/danger)
+│ ├── data/
+│ │ └── mockData.js # 6 mock bookings for testing
+│ ├── App.jsx # Main app assembly
+│ └── App.css # Global styles with responsive grid
+
+text
+
+#### 🚀 Running the Frontend
+
+```bash
+cd conference-booking-frontend
+npm install
+npm run dev
+# Open http://localhost:5173
+✅ Mock Data Sample (6 Bookings)
+javascript
+[
+  { id: 1, roomName: 'Conference Room A', date: '2024-05-20', startTime: '10:00 AM', endTime: '12:00 PM', userName: 'John Smith', status: 'confirmed' },
+  { id: 2, roomName: 'Meeting Room B', date: '2024-05-20', startTime: '2:00 PM', endTime: '4:00 PM', userName: 'Sarah Johnson', status: 'pending' },
+  { id: 3, roomName: 'Board Room', date: '2024-05-21', startTime: '9:00 AM', endTime: '11:00 AM', userName: 'Mike Wilson', status: 'confirmed' },
+  { id: 4, roomName: 'Training Room', date: '2024-05-21', startTime: '1:00 PM', endTime: '3:00 PM', userName: 'Emily Davis', status: 'confirmed' },
+  { id: 5, roomName: 'Conference Room A', date: '2024-05-22', startTime: '3:00 PM', endTime: '5:00 PM', userName: 'Tom Brown', status: 'cancelled' },
+  { id: 6, roomName: 'Innovation Hub', date: '2024-05-22', startTime: '10:00 AM', endTime: '12:00 PM', userName: 'Lisa Chen', status: 'pending' }
+]
+🎨 Component Features
+Navbar: Dark theme with blue accent, navigation placeholders
+
+Footer: Auto-updating copyright year, quick links
+
+Button: Three variants (primary blue, secondary gray, danger red) and three sizes
+
+BookingCard: Color-coded status badges, hover effects, uses Button component
+
 🤝 Contributing
 Fork the repository
 
