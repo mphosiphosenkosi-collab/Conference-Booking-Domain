@@ -37,7 +37,7 @@ const mockBookings = [
   },
   {
     id: 5,
-    roomName: 'Conference Room A',
+    roomName: 'Conference Room C',
     date: '2024-05-22',
     startTime: '3:00 PM',
     endTime: '5:00 PM',

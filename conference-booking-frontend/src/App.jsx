@@ -24,6 +24,7 @@ import Footer from './components/Footer/Footer';
 import BookingList from './components/BookingCard/BookingList';
 import BookingForm from './components/BookingForm/BookingForm';
 
+
 // Import our initial data (will be replaced by API later)
 import mockBookings from './data/mockData';
 
@@ -34,7 +35,7 @@ import './App.css';
 // STEP 2: Define the App component
 // ============================================
 function App() {
-  
+
   // ==========================================
   // STEP 3: Create State (Component's Memory)
   // ==========================================
@@ -46,7 +47,7 @@ function App() {
   //   - mockBookings: Starting data so page isn't empty
   //
   const [bookings, setBookings] = useState(mockBookings);
-  
+
   // ==========================================
   // STEP 4: Derived State (Calculated Values)
   // ==========================================
@@ -56,7 +57,7 @@ function App() {
   const totalBookings = bookings.length;
   const pendingBookings = bookings.filter(b => b.status === 'pending').length;
   const confirmedBookings = bookings.filter(b => b.status === 'confirmed').length;
-  
+
   // ==========================================
   // STEP 5: Event Handler (Lifting State Up)
   // ==========================================
@@ -68,7 +69,7 @@ function App() {
   //
   const handleAddBooking = (newBookingData) => {
     console.log("📝 App received new booking:", newBookingData);
-    
+
     // Create a complete booking object with unique ID
     // Date.now() gives milliseconds since 1970 - always unique!
     const newBooking = {
@@ -76,7 +77,24 @@ function App() {
       ...newBookingData,        // Spread all form data (roomName, userName, etc.)
       status: 'pending'         // New bookings start as pending
     };
-    
+
+    // ==========================================
+    // Extra credit: Handle Deletion (Lifting State Up)
+    // ==========================================
+
+    const handleDeleteBooking = (bookingId) => {
+      if (window.confirm('Cancel this booking?')) {
+        const updatedBookings = bookings.filter(booking => booking.id !== bookingId);
+        setBookings(updatedBookings);
+      }
+    };
+
+    // And update your BookingList prop to pass it down:
+    <BookingList
+      bookings={bookings}
+      onDeleteBooking={handleDeleteBooking}  // Pass down the delete handler
+    />
+
     // ========================================
     // IMMUTABLE UPDATE - CRITICAL!
     // ========================================
@@ -91,10 +109,10 @@ function App() {
     //    - React sees NEW array → detects change → re-renders!
     //
     setBookings([newBooking, ...bookings]);
-    
+
     // The form will clear itself - we don't do that here
   };
-  
+
   // ==========================================
   // STEP 6: Render the UI
   // ==========================================
@@ -102,43 +120,55 @@ function App() {
     <div className="app-container">
       {/* Navbar - no props needed, just displays */}
       <Navbar />
-      
+
       {/* Main content area */}
       <main className="main-content">
-        
+
         {/* ======================================
-            Section 1: Dashboard Stats
-            Shows real-time counts from our state
-            ====================================== */}
-        <div className="stats-container">
-          <div className="stat-card">
-            <span className="stat-label">Total Bookings</span>
-            <span className="stat-value">{totalBookings}</span>
+    Section 1: Search & Filter Bar
+    Help users find specific bookings
+    ====================================== */}
+        <div className="search-filter-bar">
+          <div className="search-box">
+            <span className="search-icon">🔍</span>
+            <input
+              type="text"
+              placeholder="Search by room name or booker..."
+              className="search-input"
+            />
           </div>
-          <div className="stat-card">
-            <span className="stat-label">Pending</span>
-            <span className="stat-value">{pendingBookings}</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-label">Confirmed</span>
-            <span className="stat-value">{confirmedBookings}</span>
+
+          <div className="filter-options">
+            <select className="filter-select">
+              <option value="all">All Rooms</option>
+              <option value="conference">Conference Room</option>
+              <option value="meeting">Meeting Room</option>
+              <option value="board">Board Room</option>
+            </select>
+
+            <select className="filter-select">
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
           </div>
         </div>
-        
+
         {/* ======================================
             Section 2: Booking Form
             Pass DOWN the function so it can send UP new bookings
             ====================================== */}
         <BookingForm onAdd={handleAddBooking} />
-        
+
         {/* ======================================
             Section 3: Booking List
             Pass DOWN the bookings data to display
             ====================================== */}
         <BookingList bookings={bookings} />
-        
+
       </main>
-      
+
       {/* Footer - no props needed */}
       <Footer />
     </div>

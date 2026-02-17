@@ -1,58 +1,336 @@
-/* Base button styles - shared by all buttons */
+/* src/components/ui/Button.css */
+
+/* ========================================
+   BASE BUTTON STYLES
+   ======================================== */
 .btn {
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;  /* Slightly more modern */
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 /* Disabled state */
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
 }
 
-/* Variant styles */
+/* ========================================
+   BUTTON VARIANTS - Matching Project Colors
+   ======================================== */
+
+/* Primary Blue - matches navbar accent */
 .btn-primary {
-  background-color: #3498db;
+  background: linear-gradient(135deg, #3498db, #2980b9);
   color: white;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #2980b9;
+  background: linear-gradient(135deg, #2980b9, #2471a3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
 }
 
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+/* Secondary Gray - matches footer/text */
 .btn-secondary {
-  background-color: #95a5a6;
+  background: linear-gradient(135deg, #95a5a6, #7f8c8d);
   color: white;
+  box-shadow: 0 4px 12px rgba(149, 165, 166, 0.3);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #7f8c8d;
+  background: linear-gradient(135deg, #7f8c8d, #6c7a7d);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(127, 140, 141, 0.4);
 }
 
+/* Danger Red - for delete/cancel actions */
 .btn-danger {
-  background-color: #e74c3c;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
   color: white;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
 }
 
 .btn-danger:hover:not(:disabled) {
-  background-color: #c0392b;
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(192, 57, 43, 0.4);
 }
 
-/* Size styles */
+/* Success Green - for confirm/completed actions */
+.btn-success {
+  background: linear-gradient(135deg, #27ae60, #229954);
+  color: white;
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.btn-success:hover:not(:disabled) {
+  background: linear-gradient(135deg, #229954, #1e8449);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(34, 153, 84, 0.4);
+}
+
+/* Warning Orange - for pending/caution actions */
+.btn-warning {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  color: white;
+  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+}
+
+.btn-warning:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(230, 126, 34, 0.4);
+}
+
+/* Outline variants - for less emphasis */
+.btn-outline-primary {
+  background: transparent;
+  border: 2px solid #3498db;
+  color: #3498db;
+  box-shadow: none;
+}
+
+.btn-outline-primary:hover:not(:disabled) {
+  background: #3498db;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(52, 152, 219, 0.2);
+}
+
+.btn-outline-secondary {
+  background: transparent;
+  border: 2px solid #95a5a6;
+  color: #95a5a6;
+  box-shadow: none;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  background: #95a5a6;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-outline-danger {
+  background: transparent;
+  border: 2px solid #8a4c45;
+  color: #95a5a6;
+  box-shadow: none;
+}
+
+.btn-outline-danger:hover:not(:disabled) {
+  background: #95a5a6;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(231, 76, 60, 0.2);
+}
+
+/* ========================================
+   BUTTON SIZES
+   ======================================== */
 .btn-small {
-  padding: 0.4rem 1rem;
+  padding: 0.5rem 1.2rem;
   font-size: 0.85rem;
+  border-radius: 10px;
+  gap: 6px;
 }
 
 .btn-medium {
-  padding: 0.6rem 1.5rem;
+  padding: 0.75rem 1.8rem;
   font-size: 1rem;
+  border-radius: 12px;
+  gap: 8px;
 }
 
 .btn-large {
-  padding: 0.8rem 2rem;
+  padding: 1rem 2.5rem;
   font-size: 1.1rem;
+  border-radius: 14px;
+  gap: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* ========================================
+   ICON STYLES
+   ======================================== */
+.btn-icon-left {
+  margin-right: 4px;
+  font-size: 1.1em;
+}
+
+.btn-icon-right {
+  margin-left: 4px;
+  font-size: 1.1em;
+}
+
+/* Icon-only buttons */
+.btn-icon-only {
+  padding: 0.5rem;
+  border-radius: 50%;
+  aspect-ratio: 1;
+}
+
+.btn-icon-only.btn-small {
+  padding: 0.4rem;
+  font-size: 1rem;
+}
+
+.btn-icon-only.btn-medium {
+  padding: 0.6rem;
+  font-size: 1.2rem;
+}
+
+.btn-icon-only.btn-large {
+  padding: 0.8rem;
+  font-size: 1.4rem;
+}
+
+/* ========================================
+   RIPPLE EFFECT
+   ======================================== */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s, height 0.4s;
+}
+
+.btn:active:not(:disabled)::after {
+  width: 200px;
+  height: 200px;
+}
+
+/* ========================================
+   LOADING STATE
+   ======================================== */
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn-loading::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   BLOCK BUTTONS (full width)
+   ======================================== */
+.btn-block {
+  width: 100%;
+  display: flex;
+}
+
+/* ========================================
+   BUTTON GROUPS
+   ======================================== */
+.btn-group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-group-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 768px) {
+  .btn-small {
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .btn-medium {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .btn-large {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .btn-block-mobile {
+    width: 100%;
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.btn-pulse {
+  animation: pulse 2s infinite;
+}
+
+/* ========================================
+   FOCUS STATES - Accessibility
+   ======================================== */
+.btn:focus-visible {
+  outline: 3px solid rgba(52, 152, 219, 0.4);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   DARK MODE SUPPORT (Optional)
+   ======================================== */
+@media (prefers-color-scheme: dark) {
+  .btn-outline-primary,
+  .btn-outline-secondary,
+  .btn-outline-danger {
+    background: rgba(255, 255, 255, 0.05);
+  }
 }

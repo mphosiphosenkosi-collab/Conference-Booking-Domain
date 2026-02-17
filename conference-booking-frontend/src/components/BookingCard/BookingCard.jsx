@@ -1,7 +1,8 @@
-import Button from '../Button/Button';  // Go up one level, then into Button folder
+import Button from '../Button/Button';
+// src/components/BookingCard/BookingCard.jsx
 import './BookingCard.css';
 
-function BookingCard({ 
+function BookingCard({
   id,
   roomName,
   date,
@@ -9,27 +10,24 @@ function BookingCard({
   endTime,
   userName,
   status,
-  onEdit,
-  onCancel
+  onDelete
 }) {
-  
-  // Helper function to get status color (still needed for dynamic style)
+
   const getStatusColor = (status) => {
-    switch(status?.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case 'confirmed':
-        return '#27ae60';  // green
+        return '#27ae60';
       case 'pending':
-        return '#f39c12';  // orange
+        return '#f39c12';
       case 'cancelled':
-        return '#e74c3c';  // red
+        return '#e74c3c';
       default:
-        return '#7f8c8d';  // gray
+        return '#7f8c8d';
     }
   };
-  
-  // Get status icon
+
   const getStatusIcon = (status) => {
-    switch(status?.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case 'confirmed':
         return '✅';
       case 'pending':
@@ -40,61 +38,51 @@ function BookingCard({
         return '📋';
     }
   };
-  
+
+  const handleDelete = () => {
+    if (window.confirm(`Cancel booking for ${roomName}?`)) {
+      onDelete(id);
+    }
+  };
+
   return (
-    <div className="booking-card">
-      {/* Header with room name and status */}
-      <div className="booking-card-header">
-        <h3 className="booking-card-room">{roomName}</h3>
-        <span 
-          className="booking-card-status"
-          style={{ backgroundColor: getStatusColor(status) }}  // Only dynamic part!
-        >
-          {getStatusIcon(status)} {status}
-        </span>
+    <div className={`booking-card ${status?.toLowerCase()}`}>
+      {/* Status Badge */}
+      <div
+        className="status-badge"
+        style={{ backgroundColor: getStatusColor(status) }}
+      >
+        {getStatusIcon(status)} {status}
       </div>
-      
-      {/* Booking Details */}
-      <div className="booking-card-details">
-        <div className="booking-card-detail-row">
-          <span className="booking-card-icon"></span>
-          <span className="booking-card-label">Date:</span>
-          <span>{date}</span>
-        </div>
-        <div className="booking-card-detail-row">
-          <span className="booking-card-icon"></span>
-          <span className="booking-card-label">Time:</span>
-          <span>{startTime} - {endTime}</span>
-        </div>
-        <div className="booking-card-detail-row">
-          <span className="booking-card-icon"></span>
-          <span className="booking-card-label">Booked by:</span>
-          <span>{userName}</span>
-        </div>
-        <div className="booking-card-detail-row">
-          <span className="booking-card-icon"></span>
-          <span className="booking-card-label">Booking ID:</span>
-          <span>#{id}</span>
-        </div>
+
+      {/* Room Name */}
+      <h3>{roomName}</h3>
+
+      {/* Details */}
+      <div className="booking-details">
+        <p>
+          <strong> Date:</strong> {date}
+        </p>
+        <p>
+          <strong> Time:</strong> {startTime} - {endTime}
+        </p>
+        <p>
+          <strong> Booked by:</strong> {userName}
+        </p>
+        <p className="booking-id">
+          <strong> ID:</strong> #{id}
+        </p>
       </div>
-      
-      {/* Action Buttons */}
-      <div className="booking-card-actions">
-        <Button 
-          variant="secondary" 
-          size="small" 
-          onClick={() => onEdit?.(id)}
-        >
-          ✏️ Edit
-        </Button>
-        <Button 
-          variant="danger" 
-          size="small" 
-          onClick={() => onCancel?.(id)}
-        >
-          ❌ Cancel
-        </Button>
-      </div>
+
+      {/* Primary Blue Button */}
+      <button className="btn-action-primary">
+        <span>✏️</span> Edit
+      </button>
+
+      {/* Danger Red Button */}
+      <button className="btn-action-danger" onClick={handleDelete}>
+        <span>🗑️</span> Cancel
+      </button>
     </div>
   );
 }

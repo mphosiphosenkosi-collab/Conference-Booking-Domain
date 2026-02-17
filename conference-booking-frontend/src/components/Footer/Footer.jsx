@@ -10,7 +10,7 @@ function Footer() {
         <p>© {currentYear} Conference Booking System</p>
         <p>
           <span role="img" aria-label="react">⚛️</span> 
-          React Assignment 1.1
+          React Assignment 1.2  plus extra credit 
         </p>
       </div>
     </footer>

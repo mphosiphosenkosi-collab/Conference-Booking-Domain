@@ -1,85 +1,203 @@
-/* src/components/features/BookingCard.css */
+/* src/components/BookingCard/BookingCard.css */
 
+/* ========================================
+   BOOKING CARD - Modern Design
+   ======================================== */
 .booking-card {
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 16px;
   padding: 1.5rem;
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  animation: cardAppear 0.4s ease-out;
 }
 
+/* Hover effect - lifts the card */
 .booking-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
 
-.booking-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+/* Optional: Add a subtle gradient border on hover */
+.booking-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3498db, #2ecc71);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
 }
 
-.booking-card-room {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #2c3e50;
-  margin: 0;
+.booking-card:hover::after {
+  transform: scaleX(1);
 }
 
-/* Status badge - base styles */
-.booking-card-status {
+/* ========================================
+   STATUS BADGE
+   ======================================== */
+.status-badge {
   color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
+  padding: 0.4rem 1rem;
+  border-radius: 30px;
+  font-size: 0.9rem;
   font-weight: 600;
-  display: inline-block;
-}
-
-/* Status variants - colors will be applied dynamically via style prop */
-/* We keep the structure here, but colors come from JSX */
-
-.booking-card-details {
-  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 1rem;
+  width: fit-content;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.booking-card-detail-row {
-  margin-bottom: 0.5rem;
-  color: #34495e;
+/* Status colors are set dynamically in JSX, but we keep base styles here */
+
+/* ========================================
+   CARD CONTENT
+   ======================================== */
+.booking-card h3 {
+  font-size: 1.3rem;
+  margin: 0 0 1rem 0;
+  color: #1a2634;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.booking-details {
+  flex: 1;
+}
+
+.booking-details p {
+  margin: 0.5rem 0;
+  color: #2c3e50;
   font-size: 0.95rem;
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
-.booking-card-label {
+.booking-details strong {
+  color: #34495e;
   font-weight: 600;
-  color: #7f8c8d;
-  min-width: 85px;  /* Fixed width for alignment */
-  margin-right: 0.5rem;
+  min-width: 70px;
 }
+/* ========================================
+   ACTION BUTTONS - Consistent Color Scheme
+   ======================================== */
 
-.booking-card-icon {
-  margin-right: 0.5rem;
-  font-size: 1.1rem;
-}
-
-.booking-card-actions {
+/* Base action button styles */
+.card-actions {
   display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-  border-top: 1px solid #ecf0f1;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
   padding-top: 1rem;
-  margin-top: 0.5rem;
+  border-top: 1px solid #edf2f7;
 }
 
-/* Animation for new cards (optional) */
-@keyframes slideIn {
+/* Primary Action Button (Edit/View) - Blue */
+.btn-action-primary {
+  flex: 1;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.2);
+}
+
+.btn-action-primary:hover {
+  background: linear-gradient(135deg, #2980b9, #2471a3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3);
+}
+
+/* Secondary Action Button (Cancel/Delete) - Red with grey */
+.btn-action-danger {
+  flex: 1;
+  background: white;
+  color: #e74c3c;
+  border: 2px solid #e74c3c;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-action-danger:hover {
+  background: #e74c3c;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(231, 76, 60, 0.2);
+}
+
+/* Tertiary Action Button (More Info) - Grey */
+.btn-action-secondary {
+  flex: 1;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-action-secondary:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+  transform: translateY(-2px);
+}
+
+/* Icon-only version */
+.btn-icon-only {
+  padding: 0.6rem;
+  aspect-ratio: 1;
+  border-radius: 10px;
+}
+
+/* Disabled state */
+.btn-action-primary:disabled,
+.btn-action-danger:disabled,
+.btn-action-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ========================================
+   CARD ANIMATIONS
+   ======================================== */
+@keyframes cardAppear {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -90,6 +208,83 @@
   }
 }
 
+/* Staggered animation for grid items (controlled by BookingList) */
 .booking-card {
-  animation: slideIn 0.3s ease-out;
+  animation: cardAppear 0.4s ease-out;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 768px) {
+  .booking-card {
+    padding: 1.2rem;
+  }
+  
+  .booking-card h3 {
+    font-size: 1.2rem;
+  }
+  
+  .booking-details p {
+    font-size: 0.9rem;
+  }
+  
+  .booking-details strong {
+    min-width: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-card {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .status-badge {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .booking-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .booking-details p {
+    font-size: 0.85rem;
+    margin: 0.4rem 0;
+  }
+  
+  .delete-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* ========================================
+   OPTIONAL: Different card variants
+   ======================================== */
+.booking-card.pending {
+  border-left: 4px solid #f39c12;
+}
+
+.booking-card.confirmed {
+  border-left: 4px solid #27ae60;
+}
+
+.booking-card.cancelled {
+  border-left: 4px solid #e74c3c;
+  opacity: 0.8;
+}
+
+/* ========================================
+   TOOLTIP for IDs (optional)
+   ======================================== */
+.booking-id {
+  font-size: 0.8rem;
+  color: #95a5a6;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #ecf0f1;
+  font-family: monospace;
 }
