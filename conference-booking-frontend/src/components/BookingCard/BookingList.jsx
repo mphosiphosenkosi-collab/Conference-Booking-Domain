@@ -1,37 +1,28 @@
+// src/components/BookingCard/BookingList.jsx
 import BookingCard from './BookingCard';
-import mockBookings from '../../data/mockData';
-import './BookingList.css';
 
-function BookingList() {
-  // Handler functions moved here
-  const handleEdit = (bookingId) => {
-    alert(`Edit booking #${bookingId}`);
-  };
-  
-  const handleCancel = (bookingId) => {
-    alert(`Cancel booking #${bookingId}`);
-  };
-  
+function BookingList({ bookings }) {  // receives props from App.jsx - Assign 1.2
   return (
-    <div className="booking-list">
-      <h1>Current Bookings</h1>
-      
-      <div className="bookings-grid">
-        {mockBookings.map(booking => (
-          <BookingCard
-            key={booking.id}
-            id={booking.id}
-            roomName={booking.roomName}
-            date={booking.date}
-            startTime={booking.startTime}
-            endTime={booking.endTime}
-            userName={booking.userName}
-            status={booking.status}
-            onEdit={handleEdit}
-            onCancel={handleCancel}
-          />
-        ))}
-      </div>
+    <div>
+      <h2>Current Bookings</h2>
+      {bookings.length === 0 ? (
+        <p>No bookings yet. Add your first booking above!</p>
+      ) : (
+        <div className="bookings-grid">
+          {bookings.map(booking => (
+            <BookingCard
+              key={booking.id}
+              id={booking.id}
+              roomName={booking.roomName}
+              date={booking.date}
+              startTime={booking.startTime}
+              endTime={booking.endTime}
+              userName={booking.userName}
+              status={booking.status}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
