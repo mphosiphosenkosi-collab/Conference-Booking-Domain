@@ -1,6 +1,6 @@
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import BookingList from './components/features/BookingList';  // Import the new component
+import Navbar from './components/NavBar/Navbar';
+import Footer from './components/Footer/Footer';
+import BookingList from './components/BookingCard/BookingList';  // Import the new component
 import './App.css'
 
 function App() {  

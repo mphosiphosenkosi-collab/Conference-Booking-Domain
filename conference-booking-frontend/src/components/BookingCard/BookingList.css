@@ -1,0 +1,17 @@
+/* src/components/BookingCard/BookingList.css */
+
+.booking-list {
+  width: 100%;
+}
+
+.booking-list h1 {
+  color: #1a2634;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.bookings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}

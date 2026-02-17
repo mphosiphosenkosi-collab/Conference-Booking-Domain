@@ -1,4 +1,4 @@
-import Button from '../ui/Button';  // Fixed import path!
+import Button from '../Button/Button';  // Go up one level, then into Button folder
 import './BookingCard.css';
 
 function BookingCard({ 

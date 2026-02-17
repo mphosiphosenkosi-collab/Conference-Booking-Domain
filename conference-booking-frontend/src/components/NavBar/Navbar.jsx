@@ -8,7 +8,7 @@ function Navbar() {
       
       {/* Left side - Logo/Brand */}
       <span className="navbar-logo">
-        <span className="navbar-logo-icon">🏨</span>
+        <span className="navbar-logo-icon"></span>
         ConferenceBook
       </span>
       
