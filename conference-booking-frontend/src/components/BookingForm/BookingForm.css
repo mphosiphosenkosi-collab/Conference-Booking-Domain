@@ -1,0 +1,375 @@
+/* src/components/BookingForm/BookingForm.css */
+
+/* ========================================
+   MAIN CONTAINER - Perfectly Balanced Card
+   ======================================== */
+.booking-form-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.booking-form-container {
+  max-width: 700px;  /* Perfect width - not too wide, not too narrow */
+  width: 100%;
+  margin: 0 auto;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 32px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle gradient overlay */
+.booking-form-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #3498db, #2ecc71, #f39c12);
+  border-radius: 32px 32px 0 0;
+}
+
+/* Card hover effect */
+.booking-form-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 30px 50px rgba(52, 152, 219, 0.12),
+    0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ========================================
+   HEADER SECTION - Clean & Minimal
+   ======================================== */
+.booking-form-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f0f2f5;
+}
+
+.booking-form-header h2 {
+  color: #1a2634;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.header-icon {
+  font-size: 2rem;
+  background: linear-gradient(135deg, #f0f9ff, #e6f3ff);
+  padding: 10px;
+  border-radius: 18px;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.15);
+}
+
+/* Optional subtitle */
+.form-subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+  margin-left: 3.2rem;
+}
+
+/* ========================================
+   FORM CONTENT - Well Spaced
+   ======================================== */
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* ========================================
+   FORM GROUPS - Elegant Input Fields
+   ======================================== */
+.form-group {
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.form-group:hover label {
+  color: #3498db;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 18px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+.form-group input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.form-group input:hover {
+  border-color: #cbd5e1;
+  background-color: white;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3498db;
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+}
+
+/* ========================================
+   TIME ROW - Side by Side Inputs
+   ======================================== */
+.time-row {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.time-row .form-group {
+  flex: 1;
+}
+
+/* ========================================
+   FORM BUTTONS - Balanced & Modern
+   ======================================== */
+.form-buttons {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 2px solid #f0f2f5;
+}
+
+.btn-primary, .btn-secondary {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 40px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.3px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  box-shadow: 0 8px 16px rgba(52, 152, 219, 0.25);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2980b9, #2471a3);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(52, 152, 219, 0.35);
+}
+
+.btn-secondary {
+  background: white;
+  color: #475569;
+  border: 2px solid #e2e8f0;
+}
+
+.btn-secondary:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary:active, .btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* ========================================
+   FORM DIVIDER (Optional)
+   ======================================== */
+.form-divider {
+  text-align: center;
+  margin: 0.5rem 0;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - Mobile Adjustments
+   ======================================== */
+@media (max-width: 768px) {
+  .booking-form-container {
+    padding: 1.8rem;
+    border-radius: 28px;
+  }
+  
+  .booking-form-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .header-icon {
+    font-size: 1.8rem;
+    padding: 8px;
+  }
+  
+  .time-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .btn-primary, .btn-secondary {
+    padding: 0.9rem 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-form-container {
+    padding: 1.5rem;
+    border-radius: 24px;
+  }
+  
+  .booking-form-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .header-icon {
+    font-size: 1.5rem;
+    padding: 6px;
+    border-radius: 14px;
+  }
+  
+  .form-group input {
+    padding: 0.85rem 1rem;
+    border-radius: 16px;
+  }
+  
+  .form-subtitle {
+    margin-left: 2.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* ========================================
+   ANIMATIONS - Subtle & Smooth
+   ======================================== */
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.booking-form-container {
+  animation: cardAppear 0.4s ease-out;
+}
+
+/* ========================================
+   VALIDATION STYLES - Clean Indicators
+   ======================================== */
+.form-group input:invalid:not(:placeholder-shown) {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.form-group input:invalid:not(:placeholder-shown):focus {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+.form-group input:valid:not(:placeholder-shown) {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+/* ========================================
+   OPTIONAL: Loading State
+   ======================================== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.btn-primary.loading {
+  pointer-events: none;
+  opacity: 0.7;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Add to src/components/BookingForm/BookingForm.css */
+
+/* Error States */
+.form-group.has-error input {
+  border-color: #e74c3c;
+  background-color: #fef5f5;
+}
+
+.form-group.has-error label {
+  color: #e74c3c;
+}
+
+.error-message {
+  display: block;
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  font-weight: 500;
+  animation: shake 0.3s ease-in-out;
+}
+
+.time-range-error {
+  text-align: center;
+  padding: 0.5rem;
+  background-color: #fef5f5;
+  border-radius: 8px;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #e74c3c;
+}
+
+/* Shake animation for errors */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Success state for valid fields */
+.form-group input:valid:not(:placeholder-shown) {
+  border-color: #2ecc71;
+  background-color: #f0fff4;
+}
