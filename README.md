@@ -1,4 +1,4 @@
-# 🏨 Conference Room Booking System
+# Conference Room Booking System
 
 <div align="center">
 
@@ -612,59 +612,140 @@ Content-Type: application/json
     "resolution": "approve",
     "notes": "VIP client request"
 }
+
 ### 📌 Assignment 1.1 - Frontend: Component Architecture & Static UI
 
 | Requirement | Implementation | Status |
 |-------------|---------------|--------|
 | **Project Initialization** | Vite + React, boilerplate removed | ✅ Complete |
-| **Component Decomposition** | Navbar, Footer, BookingCard, Button components | ✅ Complete |
+| **Component Decomposition** | NavBar, Footer, Button, BookingCard, BookingList components | ✅ Complete |
 | **Props & Reusability** | All data passed via props, no hardcoded text | ✅ Complete |
 | **List Rendering** | mockData.js with 6 bookings, .map(), unique keys | ✅ Complete |
-| **Styling & Layout** | Responsive CSS Grid, professional design | ✅ Complete |
+| **Styling & Layout** | Component-specific CSS files, responsive grid | ✅ Complete |
 
-#### 🧩 Components Created
-📁 conference-booking-frontend/
+#### 🗂️ Frontend Project Structure
+conference-booking-frontend/
 ├── src/
 │ ├── components/
-│ │ ├── layout/
-│ │ │ ├── Navbar.jsx # App header with navigation
-│ │ │ └── Footer.jsx # Copyright with dynamic year
-│ │ ├── features/
-│ │ │ └── BookingCard.jsx # Individual booking display
-│ │ └── ui/
-│ │ └── Button.jsx # Reusable button (primary/secondary/danger)
+│ │ ├── NavBar/ # Navigation bar component
+│ │ │ ├── NavBar.jsx
+│ │ │ └── NavBar.css
+│ │ ├── Footer/ # Footer component
+│ │ │ ├── Footer.jsx
+│ │ │ └── Footer.css
+│ │ ├── Button/ # Reusable button component
+│ │ │ ├── Button.jsx
+│ │ │ └── Button.css
+│ │ └── BookingCard/ # Booking display components
+│ │ ├── BookingCard.jsx # Individual booking card
+│ │ ├── BookingCard.css
+│ │ ├── BookingList.jsx # Handles list of bookings
+│ │ └── BookingList.css
 │ ├── data/
 │ │ └── mockData.js # 6 mock bookings for testing
 │ ├── App.jsx # Main app assembly
-│ └── App.css # Global styles with responsive grid
+│ └── App.css # Global styles
+├── index.html
+├── package.json
+└── vite.config.js
 
 text
 
-#### 🚀 Running the Frontend
+#### 🧩 Component Architecture
 
-```bash
-cd conference-booking-frontend
-npm install
-npm run dev
-# Open http://localhost:5173
-✅ Mock Data Sample (6 Bookings)
-javascript
-[
+Each component is **self-contained** in its own folder with:
+- ✅ Component logic (`.jsx`)
+- ✅ Component-specific styles (`.css`)
+- ✅ Easy to maintain and modify
+- ✅ No style conflicts between components
+
+#### 🎨 Component Features
+
+| Component | Features | Styles |
+|-----------|----------|--------|
+| **NavBar** | Logo, navigation links, user placeholder | Dark theme (#2c3e50), blue accent (#3498db), hover effects |
+| **Footer** | Dynamic copyright year, React badge | Matching navbar colors, sticky positioning |
+| **Button** | 3 variants (primary, secondary, danger), 3 sizes | Color-coded, hover effects, disabled state |
+| **BookingCard** | Displays booking details, status badges | Hover lift effect, status colors, uses Button component |
+| **BookingList** | Manages grid layout, handles edit/cancel actions | Responsive grid with auto-fill |
+
+#### 📊 Mock Data Sample (6 Bookings)
+
+```javascript
+const mockBookings = [
   { id: 1, roomName: 'Conference Room A', date: '2024-05-20', startTime: '10:00 AM', endTime: '12:00 PM', userName: 'John Smith', status: 'confirmed' },
   { id: 2, roomName: 'Meeting Room B', date: '2024-05-20', startTime: '2:00 PM', endTime: '4:00 PM', userName: 'Sarah Johnson', status: 'pending' },
   { id: 3, roomName: 'Board Room', date: '2024-05-21', startTime: '9:00 AM', endTime: '11:00 AM', userName: 'Mike Wilson', status: 'confirmed' },
   { id: 4, roomName: 'Training Room', date: '2024-05-21', startTime: '1:00 PM', endTime: '3:00 PM', userName: 'Emily Davis', status: 'confirmed' },
   { id: 5, roomName: 'Conference Room A', date: '2024-05-22', startTime: '3:00 PM', endTime: '5:00 PM', userName: 'Tom Brown', status: 'cancelled' },
-  { id: 6, roomName: 'Innovation Hub', date: '2024-05-22', startTime: '10:00 AM', endTime: '12:00 PM', userName: 'Lisa Chen', status: 'pending' }
 ]
-🎨 Component Features
-Navbar: Dark theme with blue accent, navigation placeholders
+🎯 Status Color Coding
+Status	Color	Icon
+Confirmed	Green (#27ae60)	✅
+Pending	Orange (#f39c12)	⏳
+Cancelled	Red (#e74c3c)	❌
+🚀 Running the Frontend
+bash
+# Navigate to frontend directory
+cd conference-booking-frontend
 
-Footer: Auto-updating copyright year, quick links
+# Install dependencies
+npm install
 
-Button: Three variants (primary blue, secondary gray, danger red) and three sizes
+# Start development server
+npm run dev
 
-BookingCard: Color-coded status badges, hover effects, uses Button component
+# Open in browser
+# http://localhost:5173
+📱 Responsive Design
+Desktop: 3-4 cards per row
+
+Tablet: 2 cards per row
+
+Mobile: 1 card per row
+
+Footer: Always sticks to bottom
+
+✨ Interactive Features
+Hover effects: Cards lift up, buttons change color
+
+Click handlers: Edit/Cancel buttons show alerts
+
+Status badges: Color-coded for quick recognition
+
+Smooth transitions: All animations are fluid
+
+✅ Assignment 1.1 Completion Checklist
+Vite project initialized and cleaned
+
+Component decomposition (5 components)
+
+Each component in its own folder with CSS
+
+Props used for all dynamic data
+
+Mock data with 6 bookings
+
+List rendering with .map() and unique keys
+
+Responsive grid layout
+
+Professional styling with hover effects
+
+No API calls (using mock data)
+
+Functional components only
+
+Clean App.jsx (only orchestrates components)
+
+📸 Screenshots
+(Add screenshots of your running application here)
+
+Main view: All 6 booking cards in grid
+
+Hover effect: Card lifting on hover
+
+Mobile view: Responsive stacking
 
 🤝 Contributing
 Fork the repository
