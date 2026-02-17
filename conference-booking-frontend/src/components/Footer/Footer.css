@@ -1,0 +1,86 @@
+/* src/components/layout/Footer.css */
+
+.footer {
+  background-color: #2c3e50;  /* Same dark color as navbar */
+  color: white;
+  padding: 2rem;
+  margin-top: auto;            /* Pushes footer to bottom */
+  font-family: Arial, sans-serif;
+  border-top: 3px solid #3498db; /* Blue accent line like navbar */
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow at top */
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;            /* Wrap on small screens */
+  gap: 1rem;                  /* Space between items when wrapped */
+}
+
+.footer-content p {
+  margin: 0;                   /* Remove default paragraph margins */
+  opacity: 0.9;                /* Slightly softer white */
+  font-size: 0.95rem;
+}
+
+.footer-content p:first-child {
+  font-weight: 500;           /* Slightly bolder for copyright */
+}
+
+.footer-content p:last-child {
+  background-color: #34495e;  /* Same as navbar badge */
+  padding: 0.5rem 1.2rem;
+  border-radius: 25px;         /* Pill shape */
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;                 /* Space between React icon and text */
+  border: 1px solid #3d566e;   /* Subtle border */
+  transition: all 0.3s ease;   /* Smooth hover effect */
+}
+
+/* Hover effect for the React badge */
+.footer-content p:last-child:hover {
+  background-color: #3d566e;
+  transform: translateY(-2px);  /* Slight lift on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;    /* Stack vertically on mobile */
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .footer {
+    padding: 1.5rem;
+  }
+}
+
+/* Add a subtle gradient line at the very bottom */
+.footer::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #3498db, transparent);
+}
+
+/* Make footer stick to bottom */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

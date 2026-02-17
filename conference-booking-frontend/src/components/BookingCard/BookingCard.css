@@ -1,0 +1,95 @@
+/* src/components/features/BookingCard.css */
+
+.booking-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.booking-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.booking-card-room {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0;
+}
+
+/* Status badge - base styles */
+.booking-card-status {
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* Status variants - colors will be applied dynamically via style prop */
+/* We keep the structure here, but colors come from JSX */
+
+.booking-card-details {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.booking-card-detail-row {
+  margin-bottom: 0.5rem;
+  color: #34495e;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+}
+
+.booking-card-label {
+  font-weight: 600;
+  color: #7f8c8d;
+  min-width: 85px;  /* Fixed width for alignment */
+  margin-right: 0.5rem;
+}
+
+.booking-card-icon {
+  margin-right: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.booking-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  border-top: 1px solid #ecf0f1;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* Animation for new cards (optional) */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.booking-card {
+  animation: slideIn 0.3s ease-out;
+}
