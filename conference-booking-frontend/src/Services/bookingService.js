@@ -15,7 +15,7 @@
 //
 // ============================================
 
-export function fetchAllBookings() {
+export function fetchAllBookings(signal) {  // signal is for aborting the request if needed (extra credit assignment 1.3)
   return new Promise((resolve, reject) => {
 
     // Random delay between 500–2500 ms
@@ -64,6 +64,12 @@ export function fetchAllBookings() {
       ]);
 
     }, delay);
+
+       // Abort handler- extra credit assignment 1.3
+    signal?.addEventListener("abort", () => {
+      clearTimeout(timer);
+      reject(new Error("Request aborted"));
+    });
 
   });
 }

@@ -46,6 +46,19 @@ function App() {
   // Retry trigger key — safe dependency to re-run fetch effect
   const [retryKey, setRetryKey] = useState(0);
 
+  // ==========================================
+  // TOAST STATE (Extra Credit)
+  // ==========================================
+  // Controls small success popup message
+
+  const [toast, setToast] = useState(null);
+
+  function showToast(message) {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  }
+
+
   // Category filter state (Assignment Requirement)
   const [category, setCategory] = useState("all");
 
@@ -72,48 +85,96 @@ function App() {
   // • avoids infinite loop by NOT depending on bookings
   //
 
+  // ==========================================
+  // ASYNC FETCH EFFECT — EXTRA CREDIT VERSION
+  // ==========================================
+  //
+  // Purpose:
+  // • Fetch bookings from API
+  // • Support request cancellation (AbortController)
+  // • Prevent memory leaks
+  // • Avoid infinite loops via safe dependencies
+  // • Support retry button via retryKey trigger
+  //
+  // Extra Credit Features:
+  // • AbortController cancels request if component unmounts
+  // • Safe error handling (ignore abort errors)
+  // • Compatible with stale-while-refresh UI pattern
+  //
+
   useEffect(() => {
-    // Cancellation guard — prevents state update if unmounted
-    let cancelled = false;
+
+    // Create AbortController for this specific request
+    // This lets us cancel the request if component unmounts
+    const controller = new AbortController();
 
     async function loadBookings() {
 
-      // Enter loading state → show loading UI
+      // Turn loading ON
+      // If we already have data, UI will show "Refreshing..."
       setIsLoading(true);
+
+      // Clear previous error
       setError(null);
 
       try {
-        const data = await fetchAllBookings();
 
-        // Success — only update if still mounted
-        if (!cancelled) {
-          setBookings(data);
+        // Pass abort signal into service layer
+        const data = await fetchAllBookings(controller.signal);
+
+        // Save new data into state
+        setBookings(data);
+
+        //  Extra credit — success feedback hook
+        // (only works if you added showToast helper)
+        if (typeof showToast === "function") {
+          showToast("Data sync successful");
         }
 
       } catch (err) {
 
-        // Failure — store error → show error UI
-        if (!cancelled) {
-          setError(err.message);
+        // If request was aborted — DO NOT show error UI
+        if (err.message === "Request aborted") {
+          console.log("Fetch cancelled safely");
+          return;
         }
+
+        // Real server error → show error UI
+        setError(err.message);
 
       } finally {
 
-        // Exit loading state
-        if (!cancelled) {
-          setIsLoading(false);
-        }
+        // Turn loading OFF
+        setIsLoading(false);
       }
     }
 
+    // Run the async loader
     loadBookings();
 
-    // Cleanup — prevents async race-condition updates
+    // ======================================
+    // CLEANUP FUNCTION
+    // ======================================
+    //
+    // Runs when:
+    // • Component unmounts
+    // • Effect re-runs (retryKey changes)
+    //
+    // Cancels in-flight request to prevent:
+    // • memory leaks
+    // • setState on unmounted component
+    //
+
     return () => {
-      cancelled = true;
+      controller.abort();
     };
 
-  }, [retryKey]); // Safe dependency trigger (NOT bookings!)
+
+    // Dependency discipline:
+    // Only retryKey triggers refetch
+    // NOT bookings → prevents infinite loop
+
+  }, [retryKey]);
 
   // ==========================================
   // HEARTBEAT EFFECT (Lifecycle Demonstration)
@@ -244,12 +305,20 @@ function App() {
            prevents blank screens & crashes
         ====================================== */}
 
-        {/* Loading State */}
-        {isLoading && (
+        {/* First load — no data yet */}
+        {isLoading && bookings.length === 0 && (
           <div className="loading-message">
             Loading bookings from server...
           </div>
         )}
+
+        {/* Background refresh — keep showing old data */}
+        {isLoading && bookings.length > 0 && (
+          <div className="refreshing-message">
+            Refreshing data...
+          </div>
+        )}
+
 
         {/* Error State + Retry */}
         {error && (
@@ -280,6 +349,14 @@ function App() {
         )}
 
       </main>
+
+      {/* Extra Credit Toast Notification */}
+      {toast && (
+        <div className="toast">
+          {toast}
+        </div>
+      )}
+
 
       <Footer />
     </div>
