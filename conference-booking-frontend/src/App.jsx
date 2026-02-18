@@ -46,6 +46,10 @@ function App() {
   // Retry trigger key — safe dependency to re-run fetch effect
   const [retryKey, setRetryKey] = useState(0);
 
+  // Category filter state (Assignment Requirement)
+  const [category, setCategory] = useState("all");
+
+
   // Search & filter state (existing app logic)
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
@@ -114,7 +118,7 @@ function App() {
   // ==========================================
   // HEARTBEAT EFFECT (Lifecycle Demonstration)
   // ==========================================
-  
+
   // This effect demonstrates how to run a repeating timer while the component is alive.
   // Cleanup stops the timer when component unmounts.
 
@@ -156,7 +160,12 @@ function App() {
       filters.status === 'all' ||
       booking.status === filters.status;
 
-    return matchesSearch && matchesRoom && matchesStatus;
+    //  Assignment 1.3 Category Filter
+    const matchesCategory =
+      category === "all" ||
+      booking.category === category;
+
+    return matchesSearch && matchesRoom && matchesStatus && matchesCategory;
   });
 
   // Dashboard counters (derived — no useEffect needed)
@@ -198,8 +207,6 @@ function App() {
     });
   };
 
-
-
   // ==========================================
   // RENDER UI
   // ==========================================
@@ -215,7 +222,20 @@ function App() {
           onFilterChange={handleFilterChange}
         />
 
+
+        {/* Assignment Category Filter */}
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="all">All</option>
+          <option value="internal">Internal</option>
+          <option value="client">Client</option>
+        </select>
+
+        {/* Add Booking Form (sends new bookings up via onAdd callback) */}
         <BookingForm onAdd={handleAddBooking} />
+
 
         {/* ======================================
            RESILIENT UI STATES (Assignment Core)
