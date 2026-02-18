@@ -14,7 +14,7 @@ function BookingList({ bookings, onDeleteBooking }) {
       <div className="booking-list-header">
         <div className="header-left">
           <h1>
-            <span className="header-icon">📋</span>
+            <span className="header-icon"></span>
             Bookings Overview
           </h1>
           <p className="header-subtitle">Manage and view all conference room bookings</p>
@@ -39,7 +39,7 @@ function BookingList({ bookings, onDeleteBooking }) {
       {/* Bookings Grid */}
       {bookings.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">🏨</div>
+          <div className="empty-icon"></div>
           <h3>No Bookings Yet</h3>
           <p>Create your first booking using the form above</p>
         </div>

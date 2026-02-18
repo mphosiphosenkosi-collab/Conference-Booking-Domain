@@ -77,7 +77,7 @@ function BookingForm({ onAdd }) {
     <div className="booking-form-wrapper">
       <div className="booking-form-container">
         <div className="booking-form-header">
-          <span className="header-icon">📅</span>
+          <span className="header-icon"></span>
           <h2>New Booking</h2>
         </div>
         <div className="form-subtitle">Fill in the details to create a booking</div>

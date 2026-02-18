@@ -76,12 +76,12 @@ function BookingCard({
 
       {/* Primary Blue Button */}
       <button className="btn-action-primary">
-        <span>✏️</span> Edit
+        <span></span> Edit
       </button>
 
       {/* Danger Red Button */}
       <button className="btn-action-danger" onClick={handleDelete}>
-        <span>🗑️</span> Cancel
+        <span></span> Cancel
       </button>
     </div>
   );
