@@ -111,6 +111,29 @@ function App() {
 
   }, [retryKey]); // Safe dependency trigger (NOT bookings!)
 
+  // ==========================================
+  // HEARTBEAT EFFECT (Lifecycle Demonstration)
+  // ==========================================
+  
+  // This effect demonstrates how to run a repeating timer while the component is alive.
+  // Cleanup stops the timer when component unmounts.
+
+  useEffect(() => {
+
+    const intervalId = setInterval(() => {
+      console.log("App heartbeat — still running");
+    }, 10000); // every 10 seconds
+
+    // CLEANUP FUNCTION
+    // This runs when component unmounts
+    return () => {
+      clearInterval(intervalId);
+      console.log("Heartbeat stopped — component unmounted");
+    };
+
+  }, []); // empty dependency → run once
+
+
 
 
   // ==========================================
