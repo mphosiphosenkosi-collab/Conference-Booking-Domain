@@ -78,3 +78,163 @@ Keeping state local makes the form self-contained and reusable.
 **Why lift state up?**
 By defining handleAddBooking in App and passing it down, we maintain unidirectional data flow:
 Form → App (via callback) → State update → List updates automatically
+
+📘 Assignment 1.3 – React useEffect & Async Handling
+🔹 Overview
+
+This project demonstrates advanced React useEffect usage including:
+
+Asynchronous data fetching
+
+Error handling
+
+Retry mechanism
+
+Dependency array discipline
+
+Cleanup functions
+
+AbortController request cancellation
+
+Toast notifications
+
+Stale-while-refresh UI pattern
+
+🔹 1. useEffect Blocks in This Project
+✅ Data Fetching Effect
+
+This effect:
+
+Runs on initial mount
+
+Re-runs only when retryKey changes
+
+Uses AbortController to cancel in-flight requests
+
+Handles loading, error, and success states
+
+Key concept:
+The dependency array contains only [retryKey].
+
+This prevents an infinite loop because bookings is NOT included as a dependency. If it were, calling setBookings() inside the effect would continuously retrigger the effect.
+
+✅ Heartbeat Effect (Lifecycle Demonstration)
+
+This effect:
+
+Runs once on mount ([] dependency array)
+
+Starts a timer using setInterval
+
+Cleans up using clearInterval when component unmounts
+
+This demonstrates proper lifecycle management and prevents memory leaks.
+
+✅ Category Filtering (Dependency Discipline)
+
+Category filtering is implemented using derived state instead of calling setBookings inside a useEffect.
+
+Instead of mutating state inside an effect, filtering is handled in:
+
+const filteredBookings = bookings.filter(...)
+
+
+This avoids infinite loops and keeps the state predictable.
+
+🔹 2. API Simulation Logic
+
+The API is simulated using a Promise with:
+
+Random delay (500–2500ms)
+
+20% failure chance
+
+Structured booking data
+
+Example:
+
+setTimeout(() => {
+  const shouldFail = Math.random() < 0.2;
+  if (shouldFail) reject(new Error("Server temporarily unavailable"));
+  else resolve(mockData);
+}, delay);
+
+
+This allows testing:
+
+Loading state
+
+Error state
+
+Retry functionality
+
+AbortController cancellation
+
+🔹 3. Extra Credit Features
+✅ AbortController
+
+If the component unmounts before the request completes:
+
+controller.abort();
+
+
+This prevents:
+
+Memory leaks
+
+"State update on unmounted component" warnings
+
+Race conditions
+
+✅ Toast Notifications
+
+A custom toast system displays:
+
+"Data sync successful"
+
+
+after a successful fetch.
+
+It automatically disappears after 3 seconds.
+
+✅ Stale-While-Refresh Pattern
+
+If data already exists:
+
+The old data remains visible
+
+A "Refreshing..." message appears
+
+The UI does not blank out
+
+This improves UX and mimics modern data-fetching strategies.
+
+🔹 4. The Cloudflare Incident (In My Own Words)
+
+The Cloudflare incident was caused by a small code change that unintentionally created an infinite loop in production.
+
+A system update triggered repeated requests without proper dependency control. Each update caused another re-render, which caused another update, overwhelming the system.
+
+This created a cascading failure and brought down large parts of the internet.
+
+🔹 How My Code Prevents This
+
+This project prevents similar infinite loops by:
+
+Carefully controlling dependency arrays in useEffect
+
+Avoiding putting state variables in dependency arrays when they are updated inside the effect
+
+Using derived state instead of calling setBookings inside filtering effects
+
+Using cleanup functions to prevent runaway processes
+
+For example:
+
+useEffect(() => {
+  loadBookings();
+}, [retryKey]);
+
+The effect does NOT depend on bookings, so setBookings() does not retrigger the effect endlessly.
+
+This demonstrates safe and disciplined effect management.
