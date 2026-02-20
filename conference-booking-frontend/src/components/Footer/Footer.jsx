@@ -1,5 +1,5 @@
-// src/components/layout/Footer.jsx
-import './Footer.css';  // Import the CSS file
+// src/components/Footer/Footer.jsx
+import './Footer.css';
 
 function Footer() {
   const currentYear = new Date().getFullYear();
@@ -7,12 +7,19 @@ function Footer() {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <p>© {currentYear} Conference Booking System</p>
-        <p>
-          <span role="img" aria-label="react">⚛️</span> 
-          React Assignment 1.2  plus extra credit 
-        </p>
+        <div className="footer-left">
+          <p className="copyright">© {currentYear} Conference Room Booking System</p>
+        </div>
+        
+        <div className="footer-right">
+          <p className="assignment-info">
+            React Assignment -
+          </p>
+        </div>
       </div>
+      
+      {/* Decorative gradient line */}
+      <div className="footer-gradient"></div>
     </footer>
   );
 }

@@ -49,7 +49,6 @@ function SearchFilter({ onSearchChange, onFilterChange }) {
       {/* Main search bar - always visible */}
       <div className="modern-search-bar">
         <div className="search-input-wrapper">
-          <span className="search-icon">🔍</span>
           <input
             type="text"
             placeholder="Search by room or booker..."
@@ -59,17 +58,16 @@ function SearchFilter({ onSearchChange, onFilterChange }) {
           />
           {searchTerm && (
             <button className="clear-search-btn" onClick={clearSearch}>
-              ✕
+              Clear
             </button>
           )}
         </div>
         
-        {/* Filter toggle button */}
+        {/* Filter toggle button - NO ICON */}
         <button 
           className={`filter-toggle-btn ${isFilterOpen ? 'active' : ''} ${getActiveFilterCount() > 0 ? 'has-filters' : ''}`}
           onClick={() => setIsFilterOpen(!isFilterOpen)}
         >
-          <span className="filter-icon">⚙️</span>
           <span className="filter-text">Filters</span>
           {getActiveFilterCount() > 0 && (
             <span className="filter-badge">{getActiveFilterCount()}</span>
@@ -82,7 +80,7 @@ function SearchFilter({ onSearchChange, onFilterChange }) {
         <div className="filters-panel">
           <div className="filters-grid">
             <div className="filter-item">
-              <label htmlFor="room-filter">Room Type</label>
+              <label htmlFor="room-filter">Room</label>
               <select 
                 id="room-filter"
                 value={roomFilter}
@@ -115,17 +113,17 @@ function SearchFilter({ onSearchChange, onFilterChange }) {
 
           {(roomFilter !== 'all' || statusFilter !== 'all') && (
             <div className="active-filters">
-              <span className="active-filters-label">Active filters:</span>
+              <span className="active-filters-label">Active:</span>
               {roomFilter !== 'all' && (
                 <span className="filter-tag">
                   {roomFilter}
-                  <button onClick={() => handleRoomFilterChange({ target: { value: 'all' } })}>✕</button>
+                  <button onClick={() => handleRoomFilterChange({ target: { value: 'all' } })}>×</button>
                 </span>
               )}
               {statusFilter !== 'all' && (
                 <span className="filter-tag">
                   {statusFilter}
-                  <button onClick={() => handleStatusFilterChange({ target: { value: 'all' } })}>✕</button>
+                  <button onClick={() => handleStatusFilterChange({ target: { value: 'all' } })}>×</button>
                 </span>
               )}
             </div>

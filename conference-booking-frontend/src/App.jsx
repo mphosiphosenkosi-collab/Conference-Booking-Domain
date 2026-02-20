@@ -19,16 +19,20 @@
 // • Memory-safe async handling
 //
 // ============================================
-
+import './App.css';
 import { useState, useEffect } from "react";
 import { fetchAllBookings } from "./Services/bookingService";
+
+import Heartbeat from "./components/Heartbeat/Heartbeat";
+
+
 
 import Navbar from './components/NavBar/Navbar';
 import Footer from './components/Footer/Footer';
 import BookingList from './components/BookingCard/BookingList';
 import BookingForm from './components/BookingForm/BookingForm';
 import SearchFilter from './components/SearchFilter/SearchFilter';
-import './App.css';
+
 
 function App() {
 
@@ -274,7 +278,8 @@ function App() {
 
   return (
     <div className="app-container">
-      <Navbar />
+      <Navbar /> 
+      <Heartbeat /> 
 
       <main className="main-content">
 
