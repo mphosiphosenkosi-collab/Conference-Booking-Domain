@@ -1,215 +1,88 @@
 // ============================================
-// APP.JSX - The Root Component
+// APP.JSX - ROOT LAYOUT CONTROLLER
 // ============================================
-//
-// This is the BRAIN of our application.
-// It owns the state and coordinates all other components.
-//
-// DATA FLOW:
-//   App (owns state)
-//     ├── Navbar (just display)
-//     ├── SearchFilter (sends FILTERS up via callbacks)
-//     ├── BookingForm (sends NEW bookings up via onAdd)
-//     └── BookingList (receives bookings down via props)
-//
-// Assignment Additions:
-// • Async data fetching with useEffect
-// • Loading + Error + Success UI states
-// • Retry mechanism
-// • Memory-safe async handling
-//
-// ============================================
+
 import './App.css';
 import { useState, useEffect } from "react";
 import { fetchAllBookings } from "./Services/bookingService";
 
 import Heartbeat from "./components/Heartbeat/Heartbeat";
-
-
-
 import Navbar from './components/NavBar/Navbar';
 import Footer from './components/Footer/Footer';
 import BookingList from './components/BookingCard/BookingList';
 import BookingForm from './components/BookingForm/BookingForm';
 import SearchFilter from './components/SearchFilter/SearchFilter';
 
-
 function App() {
 
-  // ==========================================
-  // STATE (Component Memory)
-  // ==========================================
+  // ============================
+  // STATE
+  // ============================
 
-  // Assignment rule: start with EMPTY data — no inline mock data
   const [bookings, setBookings] = useState([]);
-
-  // Async UI state controls
-  const [isLoading, setIsLoading] = useState(false); // shows loading UI
-  const [error, setError] = useState(null);          // shows error UI
-
-  // Retry trigger key — safe dependency to re-run fetch effect
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [retryKey, setRetryKey] = useState(0);
-
-  // ==========================================
-  // TOAST STATE (Extra Credit)
-  // ==========================================
-  // Controls small success popup message
 
   const [toast, setToast] = useState(null);
 
-  function showToast(message) {
-    setToast(message);
-    setTimeout(() => setToast(null), 3000);
-  }
-
-
-  // Category filter state (Assignment Requirement)
   const [category, setCategory] = useState("all");
-
-
-  // Search & filter state (existing app logic)
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     room: 'all',
     status: 'all'
   });
 
-  // ==========================================
-  // ASYNC SIDE EFFECT — DATA FETCHING
-  // ==========================================
-  //
-  // This effect synchronizes UI with external data.
-  //
-  // Runs:
-  // • On first mount
-  // • When retryKey changes (Retry button pressed)
-  //
-  // Safety features:
-  // • cancellation guard prevents memory leaks
-  // • avoids infinite loop by NOT depending on bookings
-  //
+  function showToast(message) {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  }
 
-  // ==========================================
-  // ASYNC FETCH EFFECT — EXTRA CREDIT VERSION
-  // ==========================================
-  //
-  // Purpose:
-  // • Fetch bookings from API
-  // • Support request cancellation (AbortController)
-  // • Prevent memory leaks
-  // • Avoid infinite loops via safe dependencies
-  // • Support retry button via retryKey trigger
-  //
-  // Extra Credit Features:
-  // • AbortController cancels request if component unmounts
-  // • Safe error handling (ignore abort errors)
-  // • Compatible with stale-while-refresh UI pattern
-  //
+  // ============================
+  // DATA FETCHING
+  // ============================
 
   useEffect(() => {
-
-    // Create AbortController for this specific request
-    // This lets us cancel the request if component unmounts
     const controller = new AbortController();
 
     async function loadBookings() {
-
-      // Turn loading ON
-      // If we already have data, UI will show "Refreshing..."
       setIsLoading(true);
-
-      // Clear previous error
       setError(null);
 
       try {
-
-        // Pass abort signal into service layer
         const data = await fetchAllBookings(controller.signal);
-
-        // Save new data into state
         setBookings(data);
-
-        //  Extra credit — success feedback hook
-        // (only works if you added showToast helper)
-        if (typeof showToast === "function") {
-          showToast("Data sync successful");
-        }
-
+        showToast("Data synced successfully");
       } catch (err) {
-
-        // If request was aborted — DO NOT show error UI
-        if (err.message === "Request aborted") {
-          console.log("Fetch cancelled safely");
-          return;
-        }
-
-        // Real server error → show error UI
+        if (err.message === "Request aborted") return;
         setError(err.message);
-
       } finally {
-
-        // Turn loading OFF
         setIsLoading(false);
       }
     }
 
-    // Run the async loader
     loadBookings();
 
-    // ======================================
-    // CLEANUP FUNCTION
-    // ======================================
-    //
-    // Runs when:
-    // • Component unmounts
-    // • Effect re-runs (retryKey changes)
-    //
-    // Cancels in-flight request to prevent:
-    // • memory leaks
-    // • setState on unmounted component
-    //
-
-    return () => {
-      controller.abort();
-    };
-
-
-    // Dependency discipline:
-    // Only retryKey triggers refetch
-    // NOT bookings → prevents infinite loop
+    return () => controller.abort();
 
   }, [retryKey]);
 
-  // ==========================================
-  // HEARTBEAT EFFECT (Lifecycle Demonstration)
-  // ==========================================
-
-  // This effect demonstrates how to run a repeating timer while the component is alive.
-  // Cleanup stops the timer when component unmounts.
+  // ============================
+  // HEARTBEAT DEMO
+  // ============================
 
   useEffect(() => {
-
     const intervalId = setInterval(() => {
-      console.log("App heartbeat — still running");
-    }, 10000); // every 10 seconds
+      console.log("App heartbeat — running");
+    }, 10000);
 
-    // CLEANUP FUNCTION
-    // This runs when component unmounts
-    return () => {
-      clearInterval(intervalId);
-      console.log("Heartbeat stopped — component unmounted");
-    };
+    return () => clearInterval(intervalId);
+  }, []);
 
-  }, []); // empty dependency → run once
+  // ============================
+  // DERIVED STATE
+  // ============================
 
-
-
-
-  // ==========================================
-  // DERIVED STATE (Calculated — NOT stored)
-  // ==========================================
-
-  // Filter bookings based on search + filters
   const filteredBookings = bookings.filter(booking => {
 
     const matchesSearch =
@@ -225,7 +98,6 @@ function App() {
       filters.status === 'all' ||
       booking.status === filters.status;
 
-    //  Assignment 1.3 Category Filter
     const matchesCategory =
       category === "all" ||
       booking.category === category;
@@ -233,16 +105,9 @@ function App() {
     return matchesSearch && matchesRoom && matchesStatus && matchesCategory;
   });
 
-  // Dashboard counters (derived — no useEffect needed)
-  const totalBookings = bookings.length;
-  const pendingBookings = bookings.filter(b => b.status === 'pending').length;
-  const confirmedBookings = bookings.filter(b => b.status === 'confirmed').length;
-
-
-
-  // ==========================================
+  // ============================
   // EVENT HANDLERS
-  // ==========================================
+  // ============================
 
   const handleAddBooking = (newBookingData) => {
     const newBooking = {
@@ -251,13 +116,12 @@ function App() {
       status: 'pending'
     };
 
-    // Local optimistic update
-    setBookings([newBooking, ...bookings]);
+    setBookings(prev => [newBooking, ...prev]);
   };
 
   const handleDeleteBooking = (bookingId) => {
     if (window.confirm('Cancel this booking?')) {
-      setBookings(bookings.filter(b => b.id !== bookingId));
+      setBookings(prev => prev.filter(b => b.id !== bookingId));
     }
   };
 
@@ -272,98 +136,95 @@ function App() {
     });
   };
 
-  // ==========================================
-  // RENDER UI
-  // ==========================================
+  // ============================
+  // RENDER
+  // ============================
 
   return (
-    <div className="app-container">
-      <Navbar /> 
-      <Heartbeat /> 
+    <div className="app-layout">
 
-      <main className="main-content">
+      {/* SIDEBAR */}
+      <Navbar />
 
-        <SearchFilter
-          onSearchChange={handleSearchChange}
-          onFilterChange={handleFilterChange}
-        />
+      {/* RIGHT SIDE CONTENT */}
+      <div className="app-content">
 
+        <main className="main-content">
 
-        {/* Assignment Category Filter */}
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="all">All</option>
-          <option value="internal">Internal</option>
-          <option value="client">Client</option>
-        </select>
+          <Heartbeat />
 
-        {/* Add Booking Form (sends new bookings up via onAdd callback) */}
-        <BookingForm onAdd={handleAddBooking} />
+          <SearchFilter
+            onSearchChange={handleSearchChange}
+            onFilterChange={handleFilterChange}
+          />
 
-
-        {/* ======================================
-           RESILIENT UI STATES (Assignment Core)
-
-           Loading → Error → Success rendering
-           prevents blank screens & crashes
-        ====================================== */}
-
-        {/* First load — no data yet */}
-        {isLoading && bookings.length === 0 && (
-          <div className="loading-message">
-            Loading bookings from server...
+          <div className="category-filter">
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="internal">Internal</option>
+              <option value="client">Client</option>
+            </select>
           </div>
-        )}
 
-        {/* Background refresh — keep showing old data */}
-        {isLoading && bookings.length > 0 && (
-          <div className="refreshing-message">
-            Refreshing data...
-          </div>
-        )}
+          <BookingForm onAdd={handleAddBooking} />
 
+          {/* LOADING STATE */}
+          {isLoading && bookings.length === 0 && (
+            <div className="loading-message">
+              Loading bookings...
+            </div>
+          )}
 
-        {/* Error State + Retry */}
-        {error && (
-          <div className="error-message">
-            <p>{error}</p>
+          {/* REFRESH STATE */}
+          {isLoading && bookings.length > 0 && (
+            <div className="refreshing-message">
+              Refreshing data...
+            </div>
+          )}
 
-            {/* Retry increments retryKey → re-triggers effect */}
-            <button onClick={() => setRetryKey(k => k + 1)}>
-              Retry
-            </button>
-          </div>
-        )}
+          {/* ERROR STATE */}
+          {error && (
+            <div className="error-message">
+              <p>{error}</p>
+              <button onClick={() => setRetryKey(k => k + 1)}>
+                Retry
+              </button>
+            </div>
+          )}
 
-        {/* Success State — show data only when safe */}
-        {!isLoading && !error && (
-          <>
-            <BookingList
-              bookings={filteredBookings}
-              onDeleteBooking={handleDeleteBooking}
-            />
+          {/* SUCCESS STATE */}
+          {!isLoading && !error && (
+            <>
+              <BookingList
+                bookings={filteredBookings}
+                onDeleteBooking={handleDeleteBooking}
+              />
 
-            {filteredBookings.length === 0 && bookings.length > 0 && (
-              <div className="no-results-message">
-                No bookings match your search criteria
-              </div>
-            )}
-          </>
-        )}
+              {filteredBookings.length === 0 && bookings.length > 0 && (
+                <div className="no-results-message">
+                  No bookings match your filters.
+                </div>
+              )}
+            </>
+          )}
 
-      </main>
+        </main>
 
-      {/* Extra Credit Toast Notification */}
+        {/* FOOTER LOCKED TO BOTTOM */}
+        <Footer />
+
+      </div>
+
+      {/* TOAST */}
       {toast && (
         <div className="toast">
           {toast}
         </div>
       )}
 
-
-      <Footer />
     </div>
   );
 }

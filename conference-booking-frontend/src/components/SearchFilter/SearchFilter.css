@@ -1,412 +1,278 @@
-/* src/components/SearchFilter/SearchFilter.css */
+/* ============================= */
+/* Search + Filter Container     */
+/* ============================= */
 
 .search-filter-wrapper {
-  background: white;
-  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
   padding: 1.5rem;
-  margin-bottom: 2.5rem;
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  position: relative;
-  overflow: hidden;
-  animation: slideDown 0.5s ease;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  transition: 0.2s ease;
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Subtle gradient background */
+/* Subtle top accent line */
 .search-filter-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  opacity: 0.7;
+  content: "";
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(to right, #6366f1, #8b5cf6);
+  border-radius: 18px 18px 0 0;
+  margin: -1.5rem -1.5rem 1.5rem -1.5rem;
 }
 
-.search-filter-wrapper::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(102, 126, 234, 0.03) 0%, transparent 70%);
-  pointer-events: none;
-}
+/* ============================= */
+/* Search Bar Layout             */
+/* ============================= */
 
-/* Modern Search Bar */
 .modern-search-bar {
   display: flex;
   gap: 1rem;
-  align-items: center;
-  position: relative;
-  z-index: 1;
+  align-items: stretch;
 }
+
+/* ============================= */
+/* Search Input                  */
+/* ============================= */
 
 .search-input-wrapper {
   flex: 1;
   position: relative;
-  display: flex;
-  align-items: center;
 }
 
 .modern-search-input {
   width: 100%;
-  padding: 1rem 1.2rem;
-  border: 2px solid #eef2f6;
-  border-radius: 16px;
-  font-size: 1rem;
-  color: #1e293b;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1.5px solid #e2e8f0;
   background: #f8fafc;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.95rem;
   font-weight: 500;
-  letter-spacing: 0.3px;
+  color: #0f172a;
+  transition: all 0.2s ease;
 }
 
 .modern-search-input::placeholder {
   color: #94a3b8;
   font-weight: 400;
-  letter-spacing: normal;
 }
 
 .modern-search-input:hover {
-  border-color: #667eea;
-  background: white;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.1);
+  border-color: #6366f1;
+  background: #ffffff;
 }
 
 .modern-search-input:focus {
   outline: none;
-  border-color: #667eea;
-  background: white;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15), 0 8px 20px rgba(0, 0, 0, 0.05);
-  transform: translateY(-2px);
+  border-color: #6366f1;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
-/* Clear button - minimal and elegant */
+/* Clear Button */
+
 .clear-search-btn {
   position: absolute;
-  right: 1rem;
-  background: #eef2f6;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #e2e8f0;
   border: none;
-  color: #475569;
-  font-size: 0.8rem;
+  border-radius: 20px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.7rem;
   font-weight: 600;
+  color: #334155;
   cursor: pointer;
-  padding: 0.4rem 1rem;
-  border-radius: 30px;
-  transition: all 0.2s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  transition: 0.2s ease;
 }
 
 .clear-search-btn:hover {
-  background: #667eea;
+  background: #6366f1;
   color: white;
-  transform: scale(1.05);
 }
 
-/* Filter Toggle Button - NO ICONS, pure text */
+/* ============================= */
+/* Filter Toggle Button          */
+/* ============================= */
+
 .filter-toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2rem;
+  padding: 0.9rem 1.5rem;
+  border-radius: 14px;
+  border: 1.5px solid #e2e8f0;
   background: #f8fafc;
-  border: 2px solid #eef2f6;
-  border-radius: 16px;
-  color: #475569;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
+  color: #334155;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   position: relative;
-  white-space: nowrap;
-  letter-spacing: 0.5px;
 }
 
 .filter-toggle-btn:hover {
-  background: white;
-  border-color: #667eea;
-  color: #667eea;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+  border-color: #6366f1;
+  color: #6366f1;
+  background: #ffffff;
 }
 
 .filter-toggle-btn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: transparent;
+  background: #6366f1;
   color: white;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  border-color: #6366f1;
 }
 
-.filter-toggle-btn.has-filters {
-  background: white;
-  border-color: #667eea;
-  color: #667eea;
-  padding-right: 3rem;
-}
+/* Filter badge */
 
 .filter-badge {
   position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #667eea;
+  top: -6px;
+  right: -6px;
+  background: #8b5cf6;
   color: white;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 20px;
   font-weight: 700;
-  padding: 0.2rem 0.6rem;
-  border-radius: 30px;
-  min-width: 1.5rem;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
-.filter-toggle-btn.active .filter-badge {
-  background: white;
-  color: #667eea;
-}
+/* ============================= */
+/* Filters Panel                 */
+/* ============================= */
 
-/* Filters Panel */
 .filters-panel {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 2px dashed #eef2f6;
-  animation: expandPanel 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  z-index: 1;
+  margin-top: 1.8rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid #e2e8f0;
 }
 
-@keyframes expandPanel {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    max-height: 500px;
-  }
-}
+/* Grid */
 
 .filters-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .filter-item {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .filter-item label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.5px;
+  color: #64748b;
 }
 
-/* Modern Select - Clean and elegant */
+/* Select */
+
 .modern-select {
-  width: 100%;
-  padding: 1rem 1.2rem;
-  border: 2px solid #eef2f6;
-  border-radius: 14px;
-  font-size: 0.95rem;
-  color: #1e293b;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
   background: #f8fafc;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  appearance: none;
-  background-image: linear-gradient(45deg, transparent 50%, #64748b 50%),
-                    linear-gradient(135deg, #64748b 50%, transparent 50%);
-  background-position: calc(100% - 20px) calc(1rem + 5px),
-                       calc(100% - 15px) calc(1rem + 5px);
-  background-size: 5px 5px,
-                   5px 5px;
-  background-repeat: no-repeat;
+  font-size: 0.9rem;
   font-weight: 500;
+  color: #0f172a;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .modern-select:hover {
-  border-color: #667eea;
-  background-color: white;
-  background-image: linear-gradient(45deg, transparent 50%, #667eea 50%),
-                    linear-gradient(135deg, #667eea 50%, transparent 50%);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.1);
+  border-color: #6366f1;
+  background: #ffffff;
 }
 
 .modern-select:focus {
   outline: none;
-  border-color: #667eea;
-  background-color: white;
-  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
-  background-image: linear-gradient(45deg, transparent 50%, #667eea 50%),
-                    linear-gradient(135deg, #667eea 50%, transparent 50%);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
-.modern-select option {
-  color: #1e293b;
-  background: white;
-  padding: 1rem;
-  font-weight: 500;
-}
+/* ============================= */
+/* Active Filters                */
+/* ============================= */
 
-/* Active Filters Section */
 .active-filters {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  padding: 1.25rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 16px;
-  animation: fadeIn 0.3s ease;
-  border: 1px solid #eef2f6;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  gap: 0.6rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
 }
 
 .active-filters-label {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.7rem;
+  font-weight: 600;
   color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
   margin-right: 0.5rem;
 }
 
 .filter-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.2rem;
   background: white;
   border: 1px solid #e2e8f0;
-  border-radius: 40px;
-  font-size: 0.9rem;
-  color: #1e293b;
+  padding: 0.4rem 0.9rem;
+  border-radius: 30px;
+  font-size: 0.8rem;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-  transition: all 0.2s ease;
+  color: #334155;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: 0.2s ease;
 }
 
 .filter-tag:hover {
-  border-color: #667eea;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+  border-color: #6366f1;
+  color: #6366f1;
 }
 
 .filter-tag button {
-  background: none;
   border: none;
-  color: currentColor;
-  font-size: 1.2rem;
-  font-weight: 300;
+  background: none;
+  font-size: 1rem;
   cursor: pointer;
-  padding: 0 0.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  opacity: 0.7;
-  line-height: 1;
+  color: inherit;
 }
 
-.filter-tag:hover button {
-  opacity: 1;
-  transform: scale(1.2);
-}
+/* ============================= */
+/* Responsive                    */
+/* ============================= */
 
-/* Responsive Design */
 @media (max-width: 768px) {
-  .search-filter-wrapper {
-    padding: 1.25rem;
-  }
-
   .modern-search-bar {
     flex-direction: column;
   }
 
-  .search-input-wrapper {
-    width: 100%;
-  }
-
   .filter-toggle-btn {
     width: 100%;
-    justify-content: center;
-    padding: 1rem;
-  }
-
-  .filters-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .filter-item {
-    width: 100%;
-  }
-
-  .modern-select {
-    width: 100%;
-  }
-
-  .active-filters {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 1rem;
-  }
-
-  .filter-tag {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .active-filters-label {
-    margin-bottom: 0.5rem;
   }
 }
 
-/* Dark mode - absolutely stunning */
+/* ============================= */
+/* Dark Mode                     */
+/* ============================= */
+
 @media (prefers-color-scheme: dark) {
+
   .search-filter-wrapper {
-    background: #1e293b;
-    border-color: rgba(102, 126, 234, 0.2);
+    background: #111827;
+    border-color: #1f2937;
   }
 
-  .modern-search-input {
+  .modern-search-input,
+  .modern-select {
     background: #0f172a;
-    border-color: #334155;
-    color: #f1f5f9;
+    border-color: #1f2937;
+    color: #e2e8f0;
   }
 
   .modern-search-input::placeholder {
@@ -414,73 +280,13 @@
   }
 
   .modern-search-input:hover,
-  .modern-search-input:focus {
-    background: #1a2634;
-    border-color: #667eea;
-  }
-
-  .clear-search-btn {
-    background: #334155;
-    color: #cbd5e1;
-  }
-
-  .clear-search-btn:hover {
-    background: #667eea;
-    color: white;
-  }
-
-  .filter-toggle-btn {
-    background: #0f172a;
-    border-color: #334155;
-    color: #cbd5e1;
-  }
-
-  .filter-toggle-btn:hover {
+  .modern-select:hover {
     background: #1e293b;
-    border-color: #667eea;
-    color: #a5b4fc;
-  }
-
-  .filter-toggle-btn.active {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-  }
-
-  .filters-panel {
-    border-top-color: #334155;
-  }
-
-  .filter-item label {
-    color: #94a3b8;
-  }
-
-  .modern-select {
-    background: #0f172a;
-    border-color: #334155;
-    color: #f1f5f9;
-    background-image: linear-gradient(45deg, transparent 50%, #94a3b8 50%),
-                      linear-gradient(135deg, #94a3b8 50%, transparent 50%);
-  }
-
-  .modern-select:hover,
-  .modern-select:focus {
-    border-color: #667eea;
-    background-image: linear-gradient(45deg, transparent 50%, #667eea 50%),
-                      linear-gradient(135deg, #667eea 50%, transparent 50%);
-  }
-
-  .modern-select option {
-    background: #1e293b;
-    color: #f1f5f9;
   }
 
   .active-filters {
     background: #0f172a;
-    border-color: #334155;
-  }
-
-  .active-filters-label {
-    color: #94a3b8;
+    border-color: #1f2937;
   }
 
   .filter-tag {
@@ -489,23 +295,4 @@
     color: #e2e8f0;
   }
 
-  .filter-tag:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-color: transparent;
-  }
-}
-
-/* Print styles */
-@media print {
-  .search-filter-wrapper {
-    box-shadow: none;
-    border: 1px solid #000;
-  }
-
-  .filter-toggle-btn,
-  .clear-search-btn,
-  .filter-tag button {
-    display: none;
-  }
 }
