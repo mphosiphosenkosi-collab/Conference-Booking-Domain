@@ -1,44 +1,89 @@
-// src/components/NavBar/Navbar.jsx
-import { useState } from 'react';
-import './Navbar.css';
+import { useState } from "react";
+import {
+  FaHome,
+  FaDoorOpen,
+  FaCalendarAlt,
+  FaClipboardList,
+  FaUserCircle,
+  FaSignOutAlt
+} from "react-icons/fa";
+
+import "./Navbar.css";
 
 function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [active, setActive] = useState("Home");
+  const [user, setUser] = useState(null);
+
+  const links = [
+    { name: "Home", icon: <FaHome /> },
+    { name: "Rooms", icon: <FaDoorOpen /> },
+    { name: "Bookings", icon: <FaClipboardList /> },
+    { name: "Calendar", icon: <FaCalendarAlt /> }
+  ];
+
+  const handleSignIn = () => {
+    setUser({
+      name: "Admin User",
+      email: "admin@conference.com"
+    });
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
 
   return (
-    <nav className="navbar">
-      <div className="nav-container">
-        {/* Logo with gradient */}
-        <div className="logo">
-          <div className="logo-icon"></div>
-          <span className="logo-text">Conference<span>Room Booking</span></span>
-        </div>
-
-        {/* Hamburger menu for mobile */}
-        <button 
-          className={`hamburger ${isMenuOpen ? 'active' : ''}`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
-        {/* Navigation Links */}
-        <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-          <a href="#" className="nav-link active">Home</a>
-          <a href="#" className="nav-link">Rooms</a>
-          <a href="#" className="nav-link">Bookings</a>
-          <a href="#" className="nav-link">Calendar</a>
-        </div>
-
-        {/* Sign In Button - No icon */}
-        <button className="signin-btn">
-          Sign In
-        </button>
+    <aside className="sidebar">
+      
+      {/* HEADER */}
+      <div className="sidebar-header">
+        <div className="logo-icon"></div>
+        <h2 className="logo-text">
+          Conference <span>Room</span>
+        </h2>
       </div>
-    </nav>
+
+      {/* AUTH SECTION (MOVED UP) */}
+      <div className="sidebar-auth">
+        {user ? (
+          <>
+            <div className="user-card">
+              <FaUserCircle className="user-avatar" />
+              <div>
+                <p className="user-name">{user.name}</p>
+                <p className="user-email">{user.email}</p>
+              </div>
+            </div>
+
+            <button className="logout-btn" onClick={handleLogout}>
+              <FaSignOutAlt />
+              <span>Logout</span>
+            </button>
+          </>
+        ) : (
+          <button className="auth-btn" onClick={handleSignIn}>
+            Sign In to Dashboard
+          </button>
+        )}
+      </div>
+
+      <div className="sidebar-divider"></div>
+
+      {/* NAVIGATION */}
+      <nav className="sidebar-nav">
+        {links.map(link => (
+          <button
+            key={link.name}
+            className={`sidebar-link ${active === link.name ? "active" : ""}`}
+            onClick={() => setActive(link.name)}
+          >
+            <span className="icon">{link.icon}</span>
+            <span className="link-text">{link.name}</span>
+          </button>
+        ))}
+      </nav>
+
+    </aside>
   );
 }
 
