@@ -1,5 +1,7 @@
-// src/components/NavBar/Navbar.jsx
 import { useState, useEffect } from 'react';
+import { 
+  BarChart2, Calendar, Home, Layers, FileText, Settings, LogOut, Users 
+} from 'lucide-react'; // industrial icons
 import './Navbar.css';
 
 const Navbar = ({ onCollapse }) => {
@@ -11,12 +13,12 @@ const Navbar = ({ onCollapse }) => {
   }, [isCollapsed, onCollapse]);
 
   const menuItems = [
-    { id: 'dashboard', icon: '📊', label: 'Dashboard', path: '/' },
-    { id: 'bookings', icon: '📅', label: 'Bookings', path: '/bookings', badge: 41 },
-    { id: 'rooms', icon: '🏨', label: 'Rooms', path: '/rooms', badge: 12 },
-    { id: 'calendar', icon: '🗓️', label: 'Calendar', path: '/calendar' },
-    { id: 'reports', icon: '📈', label: 'Reports', path: '/reports' },
-    { id: 'settings', icon: '⚙️', label: 'Settings', path: '/settings' }
+    { id: 'dashboard', icon: <Home size={18} />, label: 'Dashboard', path: '/' },
+    { id: 'bookings', icon: <Calendar size={18} />, label: 'Bookings', path: '/bookings', badge: 41 },
+    { id: 'rooms', icon: <Layers size={18} />, label: 'Rooms', path: '/rooms', badge: 12 },
+    { id: 'calendar', icon: <Calendar size={18} />, label: 'Calendar', path: '/calendar' },
+    { id: 'reports', icon: <FileText size={18} />, label: 'Reports', path: '/reports' },
+    { id: 'settings', icon: <Settings size={18} />, label: 'Settings', path: '/settings' }
   ];
 
   const conferenceStatus = {
@@ -28,7 +30,11 @@ const Navbar = ({ onCollapse }) => {
     <nav className={`navbar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="navbar-header">
         <div className="logo-area">
-          {!isCollapsed && <span className="logo-text">Conference<span className="logo-highlight">Hub</span></span>}
+          {!isCollapsed && (
+            <span className="logo-text">
+              Conference<span className="logo-highlight">Hub</span>
+            </span>
+          )}
           <button 
             className="collapse-button"
             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -39,10 +45,9 @@ const Navbar = ({ onCollapse }) => {
         </div>
       </div>
 
-      {/* Conference Status Section */}
       {!isCollapsed && (
         <div className="conference-status">
-          <h4>Conference status</h4>
+          <h4>Conference Status</h4>
           <div className="status-items">
             <div className="status-item">
               <span className="status-label">Events</span>
@@ -55,7 +60,7 @@ const Navbar = ({ onCollapse }) => {
           </div>
         </div>
       )}
-      
+
       <ul className="nav-menu">
         {menuItems.map((item) => (
           <li key={item.id} className="nav-item">
@@ -71,9 +76,7 @@ const Navbar = ({ onCollapse }) => {
               {!isCollapsed && (
                 <>
                   <span className="nav-label">{item.label}</span>
-                  {item.badge && (
-                    <span className="nav-badge">{item.badge}</span>
-                  )}
+                  {item.badge && <span className="nav-badge">{item.badge}</span>}
                 </>
               )}
             </a>
@@ -84,14 +87,14 @@ const Navbar = ({ onCollapse }) => {
       {!isCollapsed && (
         <div className="navbar-footer">
           <div className="user-info">
-            <div className="user-avatar">👤</div>
+            <div className="user-avatar">👷</div> {/* industrial vibe avatar */}
             <div className="user-details">
               <span className="user-name">John Doe</span>
               <span className="user-role">Administrator</span>
             </div>
           </div>
           <button className="logout-button">
-            <span className="logout-icon">🚪</span>
+            <LogOut size={16} className="logout-icon" />
             <span className="logout-text">Logout</span>
           </button>
         </div>
