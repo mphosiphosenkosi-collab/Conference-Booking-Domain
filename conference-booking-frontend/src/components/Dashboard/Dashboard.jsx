@@ -1,8 +1,9 @@
 // src/components/Dashboard/Dashboard.jsx
 import { useState, useEffect, useCallback } from "react";
-import BookingForm from "../BookingForm/BookingForm"; // Keep this for the FAB button
+import BookingForm from "../BookingForm/BookingForm";
 import BookingList from "../BookingCard/BookingList";
 import SearchFilter from "../SearchFilter/SearchFilter";
+import Calendar from "../Calendar/Calendar";
 import * as bookingService from "../../services/bookingService";
 import { toast } from "react-toastify";
 import "./Dashboard.css";
@@ -22,6 +23,12 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
+  // User state (in real app, this would come from auth context)
+  const [currentUser, setCurrentUser] = useState({
+    role: 'admin', // Can be 'admin', 'receptionist', 'user', 'guest'
+    name: 'Siphosenkosi'
+  });
+
   // Retry mechanism
   const [retryKey, setRetryKey] = useState(0);
 
@@ -96,31 +103,42 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* Booking Form FAB - This renders the floating button */}
+      {/* Booking Form FAB */}
       <BookingForm onSubmit={handleCreateBooking} />
 
-      {/* Bookings Grid - Full width now */}
-      <div className="bookings-grid">
-        {error && (
-          <div className="error-container">
-            <p className="error-message">{error}</p>
-            <button onClick={handleRetry} className="retry-button">
-              Retry
-            </button>
-          </div>
-        )}
-        
-        {loading ? (
-          <div className="loading-state">
-            <div className="loading-spinner"></div>
-            <p>Loading bookings...</p>
-          </div>
-        ) : (
-          <BookingList 
-            bookings={filteredBookings}
-            onDelete={handleDeleteBooking}
+      {/* Main Content Grid - Now with Calendar */}
+      <div className="dashboard-grid">
+        {/* Left Column - Bookings Grid */}
+        <div className="bookings-column">
+          {error && (
+            <div className="error-container">
+              <p className="error-message">{error}</p>
+              <button onClick={handleRetry} className="retry-button">
+                Retry
+              </button>
+            </div>
+          )}
+          
+          {loading ? (
+            <div className="loading-state">
+              <div className="loading-spinner"></div>
+              <p>Loading bookings...</p>
+            </div>
+          ) : (
+            <BookingList 
+              bookings={filteredBookings}
+              onDelete={handleDeleteBooking}
+            />
+          )}
+        </div>
+
+        {/* Right Column - Calendar */}
+        <div className="calendar-column">
+          <Calendar 
+            userRole={currentUser.role}
+            userName={currentUser.name}
           />
-        )}
+        </div>
       </div>
     </div>
   );

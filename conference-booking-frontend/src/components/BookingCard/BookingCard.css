@@ -1,43 +1,25 @@
-/* src/components/BookingCard/BookingCard.css */
-.booking-tile {
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  border: 1px solid rgba(44, 62, 80, 0.1);
-  animation: tileAppear 0.3s ease;
+/* Booking Cards Grid */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  justify-content: start;
 }
 
-@keyframes tileAppear {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Card Container */
+.booking-tile {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
 }
 
 .booking-tile:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(44, 62, 80, 0.15);
-}
-
-.booking-tile.deleting {
-  opacity: 0.5;
-  pointer-events: none;
-  animation: tileFadeOut 0.3s ease;
-}
-
-@keyframes tileFadeOut {
-  from { opacity: 1; }
-  to { opacity: 0.5; }
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
 }
 
 /* Image Container */
@@ -45,522 +27,157 @@
   position: relative;
   height: 160px;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
 .tile-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.booking-tile:hover .tile-image {
-  transform: scale(1.05);
 }
 
 .tile-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   opacity: 0.3;
-  mix-blend-mode: overlay;
 }
 
+/* Room & ID badges */
 .tile-room-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(255, 255, 255, 0.95);
-  color: #2c3e50;
-  padding: 6px 12px;
-  border-radius: 20px;
+  top: 8px;
+  left: 8px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 2;
-  max-width: calc(100% - 24px);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  padding: 4px 8px;
+  border-radius: 12px;
 }
 
 .tile-id-badge {
   position: absolute;
-  bottom: 12px;
-  left: 12px;
-  background: rgba(44, 62, 80, 0.8);
-  color: white;
-  padding: 4px 10px;
-  border-radius: 20px;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
   font-size: 0.7rem;
   font-weight: 500;
-  letter-spacing: 0.5px;
-  backdrop-filter: blur(4px);
-  z-index: 2;
+  padding: 3px 6px;
+  border-radius: 10px;
 }
 
-/* Content */
+/* Card Content */
 .tile-content {
-  padding: 20px;
+  padding: 12px 14px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  width: 100%;
 }
 
 .tile-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
-  gap: 12px;
-  width: 100%;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .tile-title {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #2c3e50;
-  margin: 0;
-  line-height: 1.4;
-  flex: 1;
-  word-break: break-word;
-  overflow-wrap: break-word;
+  color: #0f172a;
 }
 
 .tile-category {
-  font-size: 0.8rem;
-  background: #f8f9fa;
-  padding: 6px 12px;
-  border-radius: 20px;
-  color: #495057;
-  font-weight: 500;
-  white-space: nowrap;
-  flex-shrink: 0;
+  font-size: 0.75rem;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 2px 8px;
+  border-radius: 12px;
 }
 
-/* Details Grid */
+/* Card Details Grid */
 .tile-details-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  width: 100%;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: #475569;
 }
 
 .tile-detail-item {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  min-width: 0; /* Prevents flex items from overflowing */
-}
-
-.tile-detail-full {
-  grid-column: span 2;
 }
 
 .tile-detail-icon {
-  font-size: 1.1rem;
-  min-width: 24px;
-  color: #6c757d;
-  flex-shrink: 0;
+  margin-right: 6px;
+  font-size: 0.9rem;
+  line-height: 1;
 }
 
 .tile-detail-info {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  min-width: 0; /* Prevents text overflow */
 }
 
 .tile-detail-label {
-  font-size: 0.7rem;
-  color: #6c757d;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-weight: 500;
 }
 
 .tile-detail-value {
-  font-size: 0.9rem;
-  color: #2c3e50;
-  font-weight: 500;
-  line-height: 1.4;
-  word-break: break-word;
-  overflow-wrap: break-word;
+  font-size: 0.75rem;
+  color: #64748b;
 }
 
 .tile-status-text {
+  color: white;
+  padding: 2px 8px;
+  border-radius: 16px;
   display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 4px;
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* Footer */
 .tile-footer {
-  padding: 16px 20px 20px;
-  border-top: 1px solid #e9ecef;
-  margin-top: auto;
-  width: 100%;
+  padding: 10px 14px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .tile-delete-button {
-  width: 100%;
-  padding: 12px;
-  background: white;
-  color: #e74c3c;
-  border: 1px solid #e74c3c;
-  border-radius: 8px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s ease;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: background 0.2s ease;
 }
 
 .tile-delete-button:hover:not(:disabled) {
-  background: #e74c3c;
-  color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
-}
-
-.tile-delete-button:active:not(:disabled) {
-  transform: translateY(0);
+  background: #c0392b;
 }
 
 .tile-delete-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  border-color: #adb5bd;
-  color: #6c757d;
 }
 
-.delete-icon {
-  font-size: 1rem;
-}
-
-.spinner-small {
-  width: 16px;
-  height: 16px;
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #e74c3c;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* ===== RESPONSIVE BREAKPOINTS ===== */
-
-/* Extra large screens */
-@media (min-width: 1400px) {
-  .tile-image-container {
-    height: 180px;
-  }
-  
-  .tile-content {
-    padding: 24px;
-  }
-  
-  .tile-title {
-    font-size: 1.2rem;
-  }
-  
-  .tile-details-grid {
-    gap: 20px;
-  }
-}
-
-/* Large screens */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .tile-image-container {
-    height: 170px;
-  }
-  
-  .tile-content {
-    padding: 22px;
-  }
-}
-
-/* Desktop */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .tile-image-container {
-    height: 150px;
-  }
-  
-  .tile-content {
-    padding: 18px;
-  }
-  
-  .tile-details-grid {
-    gap: 14px;
-  }
-}
-
-/* Tablet Landscape */
-@media (min-width: 768px) and (max-width: 991px) {
-  .tile-image-container {
-    height: 140px;
-  }
-  
-  .tile-content {
-    padding: 16px;
-  }
-  
-  .tile-title {
-    font-size: 1rem;
-  }
-  
-  .tile-details-grid {
-    gap: 12px;
-  }
-  
-  .tile-detail-icon {
-    font-size: 1rem;
-    min-width: 20px;
-  }
-  
-  .tile-detail-value {
-    font-size: 0.85rem;
-  }
-  
-  .tile-footer {
-    padding: 12px 16px 16px;
-  }
-}
-
-/* Tablet Portrait */
-@media (min-width: 576px) and (max-width: 767px) {
-  .tile-image-container {
-    height: 160px;
-  }
-  
-  .tile-content {
-    padding: 18px;
-  }
-  
-  .tile-title {
-    font-size: 1.1rem;
-  }
-  
-  .tile-details-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-  }
-  
-  .tile-footer {
-    padding: 14px 18px 18px;
-  }
-}
-
-/* Mobile Landscape */
-@media (min-width: 480px) and (max-width: 575px) {
-  .tile-image-container {
-    height: 140px;
-  }
-  
-  .tile-content {
-    padding: 16px;
-  }
-  
-  .tile-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  
-  .tile-category {
-    align-self: flex-start;
-  }
-  
-  .tile-title {
-    font-size: 1rem;
-  }
-  
-  .tile-details-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  
-  .tile-detail-full {
-    grid-column: span 1;
-  }
-  
-  .tile-detail-item {
-    width: 100%;
-  }
-  
-  .tile-footer {
-    padding: 12px 16px 16px;
-  }
-  
-  .tile-delete-button {
-    padding: 10px;
-    font-size: 0.85rem;
-  }
-}
-
-/* Mobile Portrait */
-@media (max-width: 479px) {
-  .tile-image-container {
-    height: 120px;
-  }
-  
-  .tile-room-badge {
-    top: 8px;
-    right: 8px;
-    padding: 4px 8px;
-    font-size: 0.7rem;
-  }
-  
-  .tile-id-badge {
-    bottom: 8px;
-    left: 8px;
-    padding: 3px 8px;
-    font-size: 0.65rem;
-  }
-  
-  .tile-content {
-    padding: 12px;
-  }
-  
-  .tile-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-  
-  .tile-title {
-    font-size: 0.95rem;
-  }
-  
-  .tile-category {
-    font-size: 0.75rem;
-    padding: 4px 8px;
-  }
-  
-  .tile-details-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  
-  .tile-detail-full {
-    grid-column: span 1;
-  }
-  
-  .tile-detail-icon {
-    font-size: 0.95rem;
-    min-width: 20px;
-  }
-  
-  .tile-detail-label {
-    font-size: 0.65rem;
-  }
-  
-  .tile-detail-value {
-    font-size: 0.8rem;
-  }
-  
-  .tile-status-text {
-    font-size: 0.7rem;
-    padding: 3px 8px;
-  }
-  
-  .tile-footer {
-    padding: 10px 12px 12px;
-  }
-  
-  .tile-delete-button {
-    padding: 8px;
-    font-size: 0.8rem;
-    gap: 4px;
-  }
-  
-  .delete-icon {
-    font-size: 0.9rem;
-  }
-}
-
-/* Very small screens (less than 360px) */
-@media (max-width: 359px) {
-  .tile-image-container {
-    height: 100px;
-  }
-  
-  .tile-content {
-    padding: 10px;
-  }
-  
-  .tile-title {
-    font-size: 0.9rem;
-  }
-  
-  .tile-detail-value {
-    font-size: 0.75rem;
-  }
-  
-  .tile-delete-button {
-    font-size: 0.75rem;
-  }
-}
-
-/* High zoom level - ensure cards don't become too wide */
-@media (min-width: 2000px) {
-  .tile-image-container {
-    height: 200px;
-  }
-  
-  .tile-content {
-    padding: 28px;
-  }
-  
-  .tile-title {
-    font-size: 1.3rem;
-  }
-  
-  .tile-detail-value {
-    font-size: 1rem;
-  }
-}
-
-/* Ensure horizontal scroll never happens */
-.tile-grid,
-.booking-tile,
-.tile-content,
-.tile-details-grid {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* Fix for flexbox gap in older browsers */
-@supports not (gap: 20px) {
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
   .tile-grid {
-    margin: -10px;
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .tile-grid > * {
-    margin: 10px;
+}
+
+@media (max-width: 600px) {
+  .tile-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 }

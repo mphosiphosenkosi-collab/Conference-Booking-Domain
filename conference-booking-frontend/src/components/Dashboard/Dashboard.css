@@ -1,120 +1,120 @@
-/* src/components/Dashboard/Dashboard.css */
+/* =========================================
+   DASHBOARD LAYOUT
+========================================= */
 .dashboard {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  padding: 0 24px 24px 24px;
-}
-
-/* Filter Section */
-.filter-section {
-  width: 100%;
-  margin-bottom: 24px;
-  flex-shrink: 0;
-}
-
-/* Bookings Grid - Full width for tiles */
-.bookings-grid {
-  width: 100%;
-  min-height: 500px;
-}
-
-/* Loading state */
-.loading-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: #6c757d;
-  font-size: 1rem;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 32px;
   width: 100%;
 }
 
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  margin: 0 auto 16px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+/* Main Grid: Bookings + Calendar */
+.dashboard-grid {
+  display: grid;
+ grid-template-columns: 70% 300px; /* 70% for bookings, 300px for calendar */  gap: 64px;
+  align-items: start;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* =========================================
+   BOOKINGS COLUMN
+========================================= */
+.bookings-column {
+  display: flex;
+  flex-direction: column;
 }
 
-/* Error container */
-.error-container {
-  background: linear-gradient(135deg, #fff5f5 0%, #ffe3e3 100%);
-  border: 1px solid #ffc9c9;
-  border-radius: 16px;
-  padding: 24px;
-  text-align: center;
-  margin-bottom: 24px;
-  width: 100%;
+/* Booking Cards Grid */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Desktop: 3 cards per row */
+  gap: 28px;
+  justify-content: start; /* align neatly */
 }
 
-.error-message {
-  color: #c92a2a;
-  margin-bottom: 16px;
-  font-weight: 500;
-}
-
-.retry-button {
-  background: #c92a2a;
-  color: white;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
+/* Individual Booking Card */
+.booking-tile {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #eef2f7;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   transition: all 0.2s ease;
 }
 
-.retry-button:hover {
-  background: #a51e1e;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(201, 42, 42, 0.3);
+.booking-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.08);
 }
 
-/* Responsive */
+.tile-content {
+  padding: 18px;
+  flex: 1;
+}
+
+/* =========================================
+   CALENDAR COLUMN
+========================================= */
+.calendar-column {
+  display: flex;
+  justify-content: flex-end;
+  position: sticky;
+  top: 32px;
+  padding-left: 16px; /* spacing from booking grid */
+}
+
+.calendar-column > * {
+  width: 420px; /* small calendar size */
+  max-width: 100%;
+}
+
+/* =========================================
+   RESPONSIVE BREAKPOINTS
+========================================= */
+
+/* Medium Desktop */
+@media (max-width: 1200px) {
+  .tile-grid {
+    grid-template-columns: repeat(3, 1fr); /* still 3 cards */
+  }
+}
+
+/* Small Desktop / Tablet */
 @media (max-width: 1024px) {
-  .dashboard {
-    padding: 0 20px 20px 20px;
-  }
-  
-  .filter-section {
-    margin-bottom: 20px;
+  .tile-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
   }
 }
 
-@media (max-width: 768px) {
-  .dashboard {
-    padding: 0 16px 16px 16px;
+/* Tablet */
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr; /* single column */
   }
-  
-  .filter-section {
-    margin-bottom: 16px;
+
+  .calendar-column {
+    position: static;
+    order: -1; /* calendar moves on top */
+    justify-content: flex-start;
+    margin-bottom: 24px;
+  }
+
+  .calendar-column > * {
+    width: 220px;
   }
 }
 
-@media (max-width: 480px) {
+/* Mobile */
+@media (max-width: 600px) {
   .dashboard {
-    padding: 0 12px 12px 12px;
+    padding: 20px;
   }
-  
-  .filter-section {
-    margin-bottom: 12px;
-  }
-  
-  .loading-state {
-    padding: 40px 16px;
+
+  .tile-grid {
+    grid-template-columns: 1fr; /* single column cards */
+    gap: 20px;
   }
 }
