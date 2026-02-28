@@ -1,49 +1,50 @@
+// src/data/mockData.js
 const mockBookings = [
   {
     id: 1,
-    roomName: 'Conference Room A',
-    date: '2024-05-20',
-    startTime: '10:00 AM',
-    endTime: '12:00 PM',
-    userName: 'Musa',
-    status: 'confirmed'
+    conferenceName: 'Quarterly Business Review',
+    room: 'A',
+    status: 'confirmed',
+    category: 'internal',
+    date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    attendees: 24
   },
   {
     id: 2,
-    roomName: 'Meeting Room B',
-    date: '2024-05-20',
-    startTime: '2:00 PM',
-    endTime: '4:00 PM',
-    userName: 'Siphosenkosi',
-    status: 'pending'
+    conferenceName: 'Client Strategy Meeting',
+    room: 'B',
+    status: 'pending',
+    category: 'client',
+    date: new Date(Date.now() + 172800000).toISOString().split('T')[0],
+    attendees: 8
   },
   {
     id: 3,
-    roomName: 'Board Room',
-    date: '2024-05-21',
-    startTime: '9:00 AM',
-    endTime: '11:00 AM',
-    userName: 'Mike Mkhize',
-    status: 'confirmed'
+    conferenceName: 'Product Launch Planning',
+    room: 'C',
+    status: 'confirmed',
+    category: 'internal',
+    date: new Date(Date.now() + 259200000).toISOString().split('T')[0],
+    attendees: 45
   },
   {
     id: 4,
-    roomName: 'Training Room',
-    date: '2024-05-21',
-    startTime: '1:00 PM',
-    endTime: '3:00 PM',
-    userName: 'Emily Clarkward',
-    status: 'confirmed'
+    conferenceName: 'Board of Directors Meeting',
+    room: 'D',
+    status: 'confirmed',
+    category: 'internal',
+    date: new Date(Date.now() + 345600000).toISOString().split('T')[0],
+    attendees: 15
   },
   {
     id: 5,
-    roomName: 'Conference Room C',
-    date: '2024-05-22',
-    startTime: '3:00 PM',
-    endTime: '5:00 PM',
-    userName: 'Romio Brown',
-    status: 'cancelled'
-  },
+    conferenceName: 'Vendor Negotiations',
+    room: 'A',
+    status: 'cancelled',
+    category: 'client',
+    date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
+    attendees: 6
+  }
 ];
 
 export default mockBookings;

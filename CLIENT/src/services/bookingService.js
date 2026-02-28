@@ -1,164 +1,184 @@
 // src/services/bookingService.js
-const API_BASE_URL = 'https://jsonplaceholder.typicode.com';
+
+// Mock data for simulation
+const MOCK_BOOKINGS = [
+  {
+    id: 1,
+    conferenceName: 'Quarterly Business Review',
+    room: 'A',
+    status: 'confirmed',
+    category: 'internal',
+    date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
+    attendees: 24
+  },
+  {
+    id: 2,
+    conferenceName: 'Client Strategy Meeting',
+    room: 'B',
+    status: 'pending',
+    category: 'client',
+    date: new Date(Date.now() + 172800000).toISOString().split('T')[0],
+    attendees: 8
+  },
+  {
+    id: 3,
+    conferenceName: 'Product Launch Planning',
+    room: 'C',
+    status: 'confirmed',
+    category: 'internal',
+    date: new Date(Date.now() + 259200000).toISOString().split('T')[0],
+    attendees: 45
+  },
+  {
+    id: 4,
+    conferenceName: 'Board of Directors',
+    room: 'D',
+    status: 'confirmed',
+    category: 'internal',
+    date: new Date(Date.now() + 345600000).toISOString().split('T')[0],
+    attendees: 15
+  },
+  {
+    id: 5,
+    conferenceName: 'Vendor Negotiations',
+    room: 'A',
+    status: 'cancelled',
+    category: 'client',
+    date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
+    attendees: 6
+  }
+];
 
 /**
- * Fetches all bookings from the API
- * @returns {Promise<Array>}
+ * Simulates network delay between 500-2500ms
  */
-export const fetchAllBookings = async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/posts`);
-    if (!response.ok) throw new Error('Failed to fetch bookings');
-    const data = await response.json();
-    return transformApiResponseToBookings(data);
-  } catch (error) {
-    throw new Error(`Fetch error: ${error.message}`);
+const simulateDelay = () => {
+  const delay = Math.floor(Math.random() * 2000) + 500; // 500-2500ms
+  return new Promise(resolve => setTimeout(resolve, delay));
+};
+
+/**
+ * Simulates flaky API (20% failure rate)
+ */
+const simulateFlakyApi = () => {
+  const shouldFail = Math.random() < 0.2; // 20% chance of failure
+  if (shouldFail) {
+    throw new Error('Server Error: Unable to fetch bookings. Please try again.');
   }
 };
 
 /**
- * Transforms API response to domain booking objects
- * @param {Array} apiData 
- * @returns {Array}
+ * Fetches all bookings with simulated network conditions
+ * @param {AbortSignal} signal - For cancellation
+ * @returns {Promise<Array>}
  */
-const transformApiResponseToBookings = (apiData) => {
-  return apiData.slice(0, 10).map((item, index) => ({
-    id: item.id,
-    conferenceName: `Conference ${item.title.substring(0, 20)}`,
-    room: ['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)],
-    status: ['confirmed', 'pending', 'cancelled'][Math.floor(Math.random() * 3)],
-    category: ['internal', 'client'][Math.floor(Math.random() * 2)],
-    date: new Date(Date.now() + index * 86400000).toISOString().split('T')[0],
-    attendees: Math.floor(Math.random() * 50) + 10
+export const fetchAllBookings = async (signal) => {
+  await simulateDelay();
+  
+  // Check if aborted
+  if (signal?.aborted) {
+    throw new DOMException('Aborted', 'AbortError');
+  }
+
+  simulateFlakyApi(); // 20% chance of failure
+
+  // Return mock data with proper transformation
+  return MOCK_BOOKINGS.map(booking => ({
+    ...booking,
+    // Ensure dates are fresh
+    date: booking.id === 1 ? new Date(Date.now() + 86400000).toISOString().split('T')[0] :
+          booking.id === 2 ? new Date(Date.now() + 172800000).toISOString().split('T')[0] :
+          booking.id === 3 ? new Date(Date.now() + 259200000).toISOString().split('T')[0] :
+          booking.id === 4 ? new Date(Date.now() + 345600000).toISOString().split('T')[0] :
+          booking.date
   }));
 };
 
 /**
- * Filters bookings based on multiple criteria
- * @param {Array} bookings 
- * @param {Object} filters 
- * @returns {Array}
+ * Creates a new booking with simulated network conditions
+ * @param {Object} bookingData
+ * @returns {Promise<Object>}
  */
-export const filterBookings = (bookings, filters) => {
-  if (!bookings || !Array.isArray(bookings)) return [];
-  
-  return bookings.filter(booking => {
-    const matchesSearch = !filters.searchTerm || 
-      booking.conferenceName.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-      booking.room.toLowerCase().includes(filters.searchTerm.toLowerCase());
-    
-    const matchesRoom = !filters.room || booking.room === filters.room;
-    const matchesStatus = !filters.status || booking.status === filters.status;
-    const matchesCategory = !filters.category || booking.category === filters.category;
-    
-    return matchesSearch && matchesRoom && matchesStatus && matchesCategory;
-  });
+export const createBooking = async (bookingData) => {
+  const validation = validateBooking(bookingData);
+
+  if (!validation.isValid) {
+    throw new Error(validation.errors.join(', '));
+  }
+
+  await simulateDelay();
+  simulateFlakyApi();
+
+  // Create new booking with generated ID
+  const newBooking = {
+    id: Date.now(), // Temporary unique ID
+    ...bookingData,
+    status: 'pending' // New bookings start as pending
+  };
+
+  return newBooking;
 };
 
 /**
- * Validates booking data before creation
- * @param {Object} bookingData 
- * @returns {Object} { isValid: boolean, errors: Array }
+ * Deletes a booking by ID
+ * @param {number} id
+ * @returns {Promise<void>}
  */
+export const deleteBooking = async (id) => {
+  await simulateDelay();
+  simulateFlakyApi();
+  
+  // Success - no return value needed
+  return;
+};
+
+// Keep your existing validateBooking, filterBookings, and getFilterOptions functions
 const validateBooking = (bookingData) => {
   const errors = [];
-  
+
   if (!bookingData.conferenceName?.trim()) {
     errors.push('Conference name is required');
   }
-  
+
   if (!bookingData.room) {
     errors.push('Room selection is required');
   }
-  
+
   if (!bookingData.date) {
     errors.push('Date is required');
   }
-  
+
   if (bookingData.attendees < 1 || bookingData.attendees > 100) {
     errors.push('Attendees must be between 1 and 100');
   }
-  
+
   return {
     isValid: errors.length === 0,
     errors
   };
 };
 
-/**
- * Creates a new booking
- * @param {Object} bookingData 
- * @returns {Promise<Object>}
- */
-export const createBooking = async (bookingData) => {
-  const validation = validateBooking(bookingData);
-  
-  if (!validation.isValid) {
-    throw new Error(validation.errors.join(', '));
-  }
-  
-  try {
-    const response = await fetch(`${API_BASE_URL}/posts`, {
-      method: 'POST',
-      body: JSON.stringify({
-        title: bookingData.conferenceName,
-        body: JSON.stringify({
-          room: bookingData.room,
-          date: bookingData.date,
-          attendees: bookingData.attendees,
-          category: bookingData.category
-        }),
-        userId: 1
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    });
-    
-    if (!response.ok) throw new Error('Failed to create booking');
-    const data = await response.json();
-    
-    return {
-      id: data.id,
-      conferenceName: bookingData.conferenceName,
-      room: bookingData.room,
-      status: 'pending',
-      category: bookingData.category,
-      date: bookingData.date,
-      attendees: bookingData.attendees
-    };
-  } catch (error) {
-    throw new Error(`Create error: ${error.message}`);
-  }
+export const filterBookings = (bookings, filters) => {
+  if (!bookings || !Array.isArray(bookings)) return [];
+
+  return bookings.filter(booking => {
+    const matchesSearch = !filters.searchTerm ||
+      booking.conferenceName.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+      booking.room.toLowerCase().includes(filters.searchTerm.toLowerCase());
+
+    const matchesRoom = !filters.room || booking.room === filters.room;
+    const matchesStatus = !filters.status || booking.status === filters.status;
+    const matchesCategory = !filters.category || booking.category === filters.category;
+
+    return matchesSearch && matchesRoom && matchesStatus && matchesCategory;
+  });
 };
 
-/**
- * Deletes a booking by ID
- * @param {number} id 
- * @returns {Promise<void>}
- */
-export const deleteBooking = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/posts/${id}`, {
-      method: 'DELETE',
-    });
-    
-    if (!response.ok) throw new Error('Failed to delete booking');
-  } catch (error) {
-    throw new Error(`Delete error: ${error.message}`);
-  }
-};
-
-/**
- * Gets unique filter options from bookings
- * @param {Array} bookings 
- * @returns {Object}
- */
 export const getFilterOptions = (bookings) => {
   if (!bookings || !Array.isArray(bookings)) {
     return { rooms: [], statuses: [], categories: [] };
   }
-  
+
   return {
     rooms: [...new Set(bookings.map(b => b.room))].sort(),
     statuses: [...new Set(bookings.map(b => b.status))].sort(),

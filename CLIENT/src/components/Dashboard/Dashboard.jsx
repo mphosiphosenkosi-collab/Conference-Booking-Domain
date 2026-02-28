@@ -18,11 +18,11 @@ const Dashboard = () => {
     status: '',
     category: ''
   });
-  
+
   // UI State
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+
   // User state (in real app, this would come from auth context)
   const [currentUser, setCurrentUser] = useState({
     role: 'admin', // Can be 'admin', 'receptionist', 'user', 'guest'
@@ -33,20 +33,31 @@ const Dashboard = () => {
   const [retryKey, setRetryKey] = useState(0);
 
   // Fetch bookings
+  // In Dashboard.jsx, update the fetchBookings function:
+
   const fetchBookings = useCallback(async () => {
+    const abortController = new AbortController();
+
     setLoading(true);
     setError(null);
-    
+
     try {
-      const data = await bookingService.fetchAllBookings();
+      const data = await bookingService.fetchAllBookings(abortController.signal);
       setBookings(data);
       setFilteredBookings(data);
+      toast.success('Bookings loaded successfully');
     } catch (err) {
+      if (err.name === 'AbortError') {
+        console.log('Fetch aborted');
+        return;
+      }
       setError(err.message);
       toast.error('Failed to load bookings');
     } finally {
       setLoading(false);
     }
+
+    return () => abortController.abort();
   }, []);
 
   // Initial fetch and retry
@@ -92,11 +103,29 @@ const Dashboard = () => {
   // Get filter options from service
   const filterOptions = bookingService.getFilterOptions(bookings);
 
+  {
+    !loading && !error && (
+      <div className="total-bookings-counter">
+        <div className="counter-badge">
+          <span className="counter-label">Total Bookings</span>
+          <span className="counter-value">{filteredBookings.length}</span>
+        </div>
+        {filters && Object.values(filters).some(Boolean) && (
+          <span className="filtered-hint">
+            (filtered from {bookings.length})
+          </span>
+        )}
+      </div>
+    )
+  }
+
+
+
   return (
     <div className="dashboard">
       {/* Filter Section */}
       <div className="filter-section">
-        <SearchFilter 
+        <SearchFilter
           filters={filters}
           onFilterChange={handleFilterChange}
           options={filterOptions}
@@ -118,14 +147,14 @@ const Dashboard = () => {
               </button>
             </div>
           )}
-          
+
           {loading ? (
             <div className="loading-state">
               <div className="loading-spinner"></div>
               <p>Loading bookings...</p>
             </div>
           ) : (
-            <BookingList 
+            <BookingList
               bookings={filteredBookings}
               onDelete={handleDeleteBooking}
             />
@@ -134,7 +163,7 @@ const Dashboard = () => {
 
         {/* Right Column - Calendar */}
         <div className="calendar-column">
-          <Calendar 
+          <Calendar
             userRole={currentUser.role}
             userName={currentUser.name}
           />

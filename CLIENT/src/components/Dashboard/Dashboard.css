@@ -118,3 +118,35 @@
     gap: 20px;
   }
 }
+
+.total-bookings-counter {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  margin-bottom: 2rem;
+  display: inline-block;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.counter-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+}
+
+.counter-label {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.counter-value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.filtered-hint {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  margin-left: 1rem;
+}
