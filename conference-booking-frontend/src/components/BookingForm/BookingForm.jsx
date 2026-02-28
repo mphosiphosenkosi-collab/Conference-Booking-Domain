@@ -2,39 +2,48 @@
 import { useState } from 'react';
 import './BookingForm.css';
 
-function BookingForm({ onAdd }) {
+const BookingForm = ({ onSubmit }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [roomName, setRoomName] = useState('');
-  const [userName, setUserName] = useState('');
-  const [date, setDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [formData, setFormData] = useState({
+    conferenceName: '',
+    room: '',
+    date: '',
+    attendees: 10,
+    category: 'internal'
+  });
   
-  // NEW: State for validation errors
+  // State for validation errors
   const [errors, setErrors] = useState({});
 
-  // Available rooms for dropdown
+  // Available rooms for dropdown (matching your room codes)
   const availableRooms = [
-    'Meeting Room 1',
-    'Meeting Room 2',
-    'Meeting Room 3',
-    'Conference Room A',
-    'Conference Room B',
-    'Board Room'
+    { value: 'A', label: 'Room A - Executive Suite' },
+    { value: 'B', label: 'Room B - Conference Hall' },
+    { value: 'C', label: 'Room C - Meeting Room' },
+    { value: 'D', label: 'Room D - Board Room' }
   ];
 
   const validateForm = () => {
     const newErrors = {};
     
-    if (!roomName.trim()) newErrors.roomName = 'Please select a room';
-    if (!userName.trim()) newErrors.userName = 'Your name is required';
-    if (!date) newErrors.date = 'Date is required';
-    if (!startTime) newErrors.startTime = 'Start time is required';
-    if (!endTime) newErrors.endTime = 'End time is required';
+    if (!formData.conferenceName?.trim()) {
+      newErrors.conferenceName = 'Conference name is required';
+    }
     
-    // Optional: Check if end time is after start time
-    if (startTime && endTime && startTime >= endTime) {
-      newErrors.timeRange = 'End time must be after start time';
+    if (!formData.room) {
+      newErrors.room = 'Please select a room';
+    }
+    
+    if (!formData.date) {
+      newErrors.date = 'Date is required';
+    }
+    
+    if (formData.attendees < 1 || formData.attendees > 100) {
+      newErrors.attendees = 'Attendees must be between 1 and 100';
+    }
+    
+    if (!formData.category) {
+      newErrors.category = 'Please select a category';
     }
     
     return newErrors;
@@ -47,57 +56,54 @@ function BookingForm({ onAdd }) {
     const validationErrors = validateForm();
     
     if (Object.keys(validationErrors).length > 0) {
-      // Show errors
       setErrors(validationErrors);
-      
-      // Show alert with first error (user-friendly)
-      const firstError = Object.values(validationErrors)[0];
-      alert(`⚠️ ${firstError}`);
       return;
     }
     
     // Clear any previous errors
     setErrors({});
     
-    // Create new booking
-    const newBooking = {
-      id: Date.now(),
-      roomName: roomName.trim(),
-      userName: userName.trim(),
-      date,
-      startTime,
-      endTime,
-      status: 'pending'
-    };
+    // Submit booking
+    onSubmit(formData);
     
-    // Add booking
-    onAdd(newBooking);
-    
-    // Clear form and close modal
-    setRoomName('');
-    setUserName('');
-    setDate('');
-    setStartTime('');
-    setEndTime('');
+    // Reset form and close modal
+    setFormData({
+      conferenceName: '',
+      room: '',
+      date: '',
+      attendees: 10,
+      category: 'internal'
+    });
     setIsOpen(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'attendees' ? parseInt(value) || 0 : value
+    }));
+    
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors({...errors, [name]: null});
+    }
   };
 
   // Helper function to check if a field has an error
   const hasError = (fieldName) => !!errors[fieldName];
-
-  // Calculate booking duration if times are selected
-  const getBookingDuration = () => {
-    if (startTime && endTime) {
-      return `${startTime} - ${endTime}`;
-    }
-    return 'Not set';
-  };
 
   // Format date for display
   const formatDate = (dateString) => {
     if (!dateString) return 'Not set';
     const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  // Get room label by value
+  const getRoomLabel = (roomValue) => {
+    const room = availableRooms.find(r => r.value === roomValue);
+    return room ? room.label : 'Not selected';
   };
 
   const openModal = () => {
@@ -108,12 +114,14 @@ function BookingForm({ onAdd }) {
   const closeModal = () => {
     setIsOpen(false);
     document.body.style.overflow = 'unset'; // Restore scrolling
-    // Optional: Reset form when closing
-    setRoomName('');
-    setUserName('');
-    setDate('');
-    setStartTime('');
-    setEndTime('');
+    // Reset form and errors when closing
+    setFormData({
+      conferenceName: '',
+      room: '',
+      date: '',
+      attendees: 10,
+      category: 'internal'
+    });
     setErrors({});
   };
 
@@ -138,20 +146,20 @@ function BookingForm({ onAdd }) {
               <h3 className="overview-title">Booking Summary</h3>
               <div className="overview-grid">
                 <div className="overview-item">
-                  <span className="overview-label">Room</span>
-                  <span className="overview-value">{roomName || '—'}</span>
+                  <span className="overview-label">Conference</span>
+                  <span className="overview-value">{formData.conferenceName || '—'}</span>
                 </div>
                 <div className="overview-item">
-                  <span className="overview-label">Booker</span>
-                  <span className="overview-value">{userName || '—'}</span>
+                  <span className="overview-label">Room</span>
+                  <span className="overview-value">{getRoomLabel(formData.room)}</span>
                 </div>
                 <div className="overview-item">
                   <span className="overview-label">Date</span>
-                  <span className="overview-value">{formatDate(date)}</span>
+                  <span className="overview-value">{formatDate(formData.date)}</span>
                 </div>
                 <div className="overview-item">
-                  <span className="overview-label">Time</span>
-                  <span className="overview-value">{getBookingDuration()}</span>
+                  <span className="overview-label">Attendees</span>
+                  <span className="overview-value">{formData.attendees || '—'}</span>
                 </div>
               </div>
             </div>
@@ -160,66 +168,62 @@ function BookingForm({ onAdd }) {
             <div className="booking-form-container">
               <div className="booking-form-header">
                 <h2>Create New Booking</h2>
-                <p className="form-subtitle">Fill in the details to reserve a meeting room</p>
+                <p className="form-subtitle">Fill in the details to reserve a conference room</p>
               </div>
               
               <form onSubmit={handleSubmit}>
                 <div className="form-content">
-                  {/* Room Name Dropdown */}
-                  <div className={`form-group ${hasError('roomName') ? 'has-error' : ''}`}>
-                    <label>Select Meeting Room</label>
-                    <select
-                      value={roomName}
-                      onChange={(e) => {
-                        setRoomName(e.target.value);
-                        if (errors.roomName) {
-                          setErrors({...errors, roomName: null});
-                        }
-                      }}
-                      className={hasError('roomName') ? 'error' : ''}
-                    >
-                      <option value="">— Choose a room —</option>
-                      {availableRooms.map(room => (
-                        <option key={room} value={room}>{room}</option>
-                      ))}
-                    </select>
-                    {errors.roomName && (
-                      <span className="error-message">{errors.roomName}</span>
+                  {/* Conference Name */}
+                  <div className={`form-group ${hasError('conferenceName') ? 'has-error' : ''}`}>
+                    <label>
+                      <span>📋</span> Conference Name
+                    </label>
+                    <input
+                      type="text"
+                      name="conferenceName"
+                      value={formData.conferenceName}
+                      onChange={handleChange}
+                      placeholder="e.g., Quarterly Business Review"
+                      className={hasError('conferenceName') ? 'error' : ''}
+                    />
+                    {errors.conferenceName && (
+                      <span className="error-message">{errors.conferenceName}</span>
                     )}
                   </div>
                   
-                  {/* User Name Field */}
-                  <div className={`form-group ${hasError('userName') ? 'has-error' : ''}`}>
-                    <label>Your Name</label>
-                    <input
-                      type="text"
-                      value={userName}
-                      onChange={(e) => {
-                        setUserName(e.target.value);
-                        if (errors.userName) {
-                          setErrors({...errors, userName: null});
-                        }
-                      }}
-                      placeholder="e.g., John Smith"
-                      className={hasError('userName') ? 'error' : ''}
-                    />
-                    {errors.userName && (
-                      <span className="error-message">{errors.userName}</span>
+                  {/* Room Selection */}
+                  <div className={`form-group ${hasError('room') ? 'has-error' : ''}`}>
+                    <label>
+                      <span>📍</span> Select Meeting Room
+                    </label>
+                    <select
+                      name="room"
+                      value={formData.room}
+                      onChange={handleChange}
+                      className={hasError('room') ? 'error' : ''}
+                    >
+                      <option value="">— Choose a room —</option>
+                      {availableRooms.map(room => (
+                        <option key={room.value} value={room.value}>
+                          {room.label}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.room && (
+                      <span className="error-message">{errors.room}</span>
                     )}
                   </div>
                   
                   {/* Date Field */}
                   <div className={`form-group ${hasError('date') ? 'has-error' : ''}`}>
-                    <label>Select Date</label>
+                    <label>
+                      <span>📅</span> Select Date
+                    </label>
                     <input
                       type="date"
-                      value={date}
-                      onChange={(e) => {
-                        setDate(e.target.value);
-                        if (errors.date) {
-                          setErrors({...errors, date: null});
-                        }
-                      }}
+                      name="date"
+                      value={formData.date}
+                      onChange={handleChange}
                       className={hasError('date') ? 'error' : ''}
                       min={new Date().toISOString().split('T')[0]}
                     />
@@ -228,56 +232,48 @@ function BookingForm({ onAdd }) {
                     )}
                   </div>
                   
-                  {/* Time Fields */}
-                  <div className="time-row">
-                    <div className={`form-group ${hasError('startTime') ? 'has-error' : ''}`}>
-                      <label>Start Time</label>
-                      <input
-                        type="time"
-                        value={startTime}
-                        onChange={(e) => {
-                          setStartTime(e.target.value);
-                          if (errors.startTime || errors.timeRange) {
-                            setErrors({...errors, startTime: null, timeRange: null});
-                          }
-                        }}
-                        className={hasError('startTime') ? 'error' : ''}
-                      />
-                      {errors.startTime && (
-                        <span className="error-message">{errors.startTime}</span>
-                      )}
-                    </div>
-                    
-                    <div className={`form-group ${hasError('endTime') ? 'has-error' : ''}`}>
-                      <label>End Time</label>
-                      <input
-                        type="time"
-                        value={endTime}
-                        onChange={(e) => {
-                          setEndTime(e.target.value);
-                          if (errors.endTime || errors.timeRange) {
-                            setErrors({...errors, endTime: null, timeRange: null});
-                          }
-                        }}
-                        className={hasError('endTime') ? 'error' : ''}
-                      />
-                      {errors.endTime && (
-                        <span className="error-message">{errors.endTime}</span>
-                      )}
-                    </div>
+                  {/* Attendees */}
+                  <div className={`form-group ${hasError('attendees') ? 'has-error' : ''}`}>
+                    <label>
+                      <span>👥</span> Number of Attendees
+                    </label>
+                    <input
+                      type="number"
+                      name="attendees"
+                      value={formData.attendees}
+                      onChange={handleChange}
+                      min="1"
+                      max="100"
+                      className={hasError('attendees') ? 'error' : ''}
+                    />
+                    {errors.attendees && (
+                      <span className="error-message">{errors.attendees}</span>
+                    )}
                   </div>
                   
-                  {/* Time Range Error */}
-                  {errors.timeRange && (
-                    <div className="error-message time-range-error">
-                      {errors.timeRange}
-                    </div>
-                  )}
+                  {/* Category Selection */}
+                  <div className={`form-group ${hasError('category') ? 'has-error' : ''}`}>
+                    <label>
+                      <span>🏷️</span> Booking Category
+                    </label>
+                    <select
+                      name="category"
+                      value={formData.category}
+                      onChange={handleChange}
+                      className={hasError('category') ? 'error' : ''}
+                    >
+                      <option value="internal">🏢 Internal Meeting</option>
+                      <option value="client">🤝 Client Meeting</option>
+                    </select>
+                    {errors.category && (
+                      <span className="error-message">{errors.category}</span>
+                    )}
+                  </div>
                   
                   {/* Form Buttons */}
                   <div className="form-buttons">
                     <button type="submit" className="btn-primary">
-                      Create Booking
+                      ✨ Create Booking
                     </button>
                     <button 
                       type="button" 
@@ -295,6 +291,6 @@ function BookingForm({ onAdd }) {
       )}
     </>
   );
-}
+};
 
 export default BookingForm;

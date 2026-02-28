@@ -2,136 +2,190 @@
 import { useState } from 'react';
 import './SearchFilter.css';
 
-function SearchFilter({ onSearchChange, onFilterChange }) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [roomFilter, setRoomFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
+const SearchFilter = ({ filters, onFilterChange, options }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    onSearchChange(value);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    onFilterChange({ [name]: value });
   };
 
-  const handleRoomFilterChange = (e) => {
-    const value = e.target.value;
-    setRoomFilter(value);
+  const handleClear = () => {
     onFilterChange({
-      room: value,
-      status: statusFilter
+      searchTerm: '',
+      room: '',
+      status: '',
+      category: ''
     });
   };
 
-  const handleStatusFilterChange = (e) => {
-    const value = e.target.value;
-    setStatusFilter(value);
-    onFilterChange({
-      room: roomFilter,
-      status: value
-    });
-  };
-
-  const clearSearch = () => {
-    setSearchTerm('');
-    onSearchChange('');
-  };
-
-  const getActiveFilterCount = () => {
-    let count = 0;
-    if (roomFilter !== 'all') count++;
-    if (statusFilter !== 'all') count++;
-    return count;
-  };
+  const activeFiltersCount = Object.values(filters).filter(Boolean).length;
 
   return (
-    <div className="search-filter-wrapper">
-      {/* Main search bar - always visible */}
-      <div className="modern-search-bar">
-        <div className="search-input-wrapper">
-          <input
-            type="text"
-            placeholder="Search by room or booker..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="modern-search-input"
-          />
-          {searchTerm && (
-            <button className="clear-search-btn" onClick={clearSearch}>
-              Clear
-            </button>
-          )}
+    <div className="search-filter-container">
+      <div className="filter-header" onClick={() => setIsExpanded(!isExpanded)}>
+        <div className="filter-header-left">
+          <div className="filter-icon-wrapper">
+            <span className="filter-icon">🔍</span>
+          </div>
+          <div className="filter-title-section">
+            <h3 className="filter-title">Filter Bookings</h3>
+            <span className="filter-subtitle">Find and filter conference rooms</span>
+          </div>
         </div>
         
-        {/* Filter toggle button - NO ICON */}
-        <button 
-          className={`filter-toggle-btn ${isFilterOpen ? 'active' : ''} ${getActiveFilterCount() > 0 ? 'has-filters' : ''}`}
-          onClick={() => setIsFilterOpen(!isFilterOpen)}
-        >
-          <span className="filter-text">Filters</span>
-          {getActiveFilterCount() > 0 && (
-            <span className="filter-badge">{getActiveFilterCount()}</span>
+        <div className="filter-header-right">
+          {activeFiltersCount > 0 && (
+            <span className="filter-badge">{activeFiltersCount}</span>
           )}
-        </button>
+          <button className="filter-expand-btn">
+            <span className={`expand-icon ${isExpanded ? 'expanded' : ''}`}>
+              {isExpanded ? '−' : '+'}
+            </span>
+          </button>
+        </div>
       </div>
 
-      {/* Expandable filters panel */}
-      {isFilterOpen && (
-        <div className="filters-panel">
-          <div className="filters-grid">
-            <div className="filter-item">
-              <label htmlFor="room-filter">Room</label>
-              <select 
-                id="room-filter"
-                value={roomFilter}
-                onChange={handleRoomFilterChange}
-                className="modern-select"
-              >
-                <option value="all">All Rooms</option>
-                <option value="Conference Room A">Conference Room A</option>
-                <option value="Conference Room B">Conference Room B</option>
-                <option value="Meeting Room 1">Meeting Room 1</option>
-                <option value="Meeting Room 2">Meeting Room 2</option>
-                <option value="Board Room">Board Room</option>
-              </select>
+      <div className={`filter-content ${isExpanded ? 'expanded' : ''}`}>
+        {/* Search Input */}
+        <div className="filter-row">
+          <div className="filter-group search-group">
+            <label className="filter-label">
+              <span className="label-icon">🔍</span>
+              Search
+            </label>
+            <div className="input-wrapper">
+              <input
+                type="text"
+                name="searchTerm"
+                placeholder="Search by conference name or room..."
+                value={filters.searchTerm}
+                onChange={handleChange}
+                className="search-input"
+              />
+              {filters.searchTerm && (
+                <button 
+                  className="input-clear"
+                  onClick={() => onFilterChange({ searchTerm: '' })}
+                >
+                  ×
+                </button>
+              )}
             </div>
+          </div>
+        </div>
 
-            <div className="filter-item">
-              <label htmlFor="status-filter">Status</label>
-              <select 
-                id="status-filter"
-                value={statusFilter}
-                onChange={handleStatusFilterChange}
-                className="modern-select"
+        {/* Filter Selects */}
+        <div className="filter-row filters-grid">
+          <div className="filter-group">
+            <label className="filter-label">
+              <span className="label-icon">📍</span>
+              Room
+            </label>
+            <div className="select-wrapper">
+              <select
+                name="room"
+                value={filters.room}
+                onChange={handleChange}
+                className="filter-select"
               >
-                <option value="all">All Status</option>
-                <option value="pending">Pending</option>
-                <option value="confirmed">Confirmed</option>
+                <option value="">All Rooms</option>
+                {options.rooms.map(room => (
+                  <option key={room} value={room}>Room {room}</option>
+                ))}
               </select>
+              <span className="select-arrow">▼</span>
             </div>
           </div>
 
-          {(roomFilter !== 'all' || statusFilter !== 'all') && (
-            <div className="active-filters">
-              <span className="active-filters-label">Active:</span>
-              {roomFilter !== 'all' && (
-                <span className="filter-tag">
-                  {roomFilter}
-                  <button onClick={() => handleRoomFilterChange({ target: { value: 'all' } })}>×</button>
-                </span>
-              )}
-              {statusFilter !== 'all' && (
-                <span className="filter-tag">
-                  {statusFilter}
-                  <button onClick={() => handleStatusFilterChange({ target: { value: 'all' } })}>×</button>
-                </span>
-              )}
+          <div className="filter-group">
+            <label className="filter-label">
+              <span className="label-icon">📊</span>
+              Status
+            </label>
+            <div className="select-wrapper">
+              <select
+                name="status"
+                value={filters.status}
+                onChange={handleChange}
+                className="filter-select"
+              >
+                <option value="">All Statuses</option>
+                {options.statuses.map(status => (
+                  <option key={status} value={status}>
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </option>
+                ))}
+              </select>
+              <span className="select-arrow">▼</span>
             </div>
-          )}
+          </div>
+
+          <div className="filter-group">
+            <label className="filter-label">
+              <span className="label-icon">🏷️</span>
+              Category
+            </label>
+            <div className="select-wrapper">
+              <select
+                name="category"
+                value={filters.category}
+                onChange={handleChange}
+                className="filter-select"
+              >
+                <option value="">All Categories</option>
+                {options.categories.map(category => (
+                  <option key={category} value={category}>
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </option>
+                ))}
+              </select>
+              <span className="select-arrow">▼</span>
+            </div>
+          </div>
         </div>
-      )}
+
+        {/* Active Filters & Clear Button */}
+        {activeFiltersCount > 0 && (
+          <div className="filter-footer">
+            <div className="active-filters">
+              <span className="active-filters-label">Active filters:</span>
+              <div className="filter-tags">
+                {filters.searchTerm && (
+                  <span className="filter-tag">
+                    Search: "{filters.searchTerm}"
+                    <button onClick={() => onFilterChange({ searchTerm: '' })}>×</button>
+                  </span>
+                )}
+                {filters.room && (
+                  <span className="filter-tag">
+                    Room {filters.room}
+                    <button onClick={() => onFilterChange({ room: '' })}>×</button>
+                  </span>
+                )}
+                {filters.status && (
+                  <span className="filter-tag">
+                    {filters.status}
+                    <button onClick={() => onFilterChange({ status: '' })}>×</button>
+                  </span>
+                )}
+                {filters.category && (
+                  <span className="filter-tag">
+                    {filters.category}
+                    <button onClick={() => onFilterChange({ category: '' })}>×</button>
+                  </span>
+                )}
+              </div>
+            </div>
+            <button onClick={handleClear} className="clear-filters-button">
+              <span className="clear-icon">🗑️</span>
+              Clear All
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+};
 
 export default SearchFilter;

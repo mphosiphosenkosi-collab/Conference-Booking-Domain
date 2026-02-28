@@ -1,27 +1,30 @@
 // src/components/Footer/Footer.jsx
 import './Footer.css';
 
-function Footer() {
+const Footer = () => {
   const currentYear = new Date().getFullYear();
   
   return (
     <footer className="footer">
       <div className="footer-content">
-        <div className="footer-left">
-          <p className="copyright">© {currentYear} Conference Room Booking System</p>
+        <div className="footer-section">
+          <p>&copy; {currentYear} ConferenceHub. All rights reserved.</p>
         </div>
         
-        <div className="footer-right">
-          <p className="assignment-info">
-            React Assignment -
-          </p>
+        <div className="footer-section">
+          <span className="version">v2.0.0</span>
+        </div>
+        
+        <div className="footer-links">
+          <a href="#" onClick={(e) => e.preventDefault()}>Privacy</a>
+          <span className="separator">•</span>
+          <a href="#" onClick={(e) => e.preventDefault()}>Terms</a>
+          <span className="separator">•</span>
+          <a href="#" onClick={(e) => e.preventDefault()}>Support</a>
         </div>
       </div>
-      
-      {/* Decorative gradient line */}
-      <div className="footer-gradient"></div>
     </footer>
   );
-}
+};
 
 export default Footer;
